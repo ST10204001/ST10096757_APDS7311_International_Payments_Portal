@@ -25,6 +25,7 @@ mongoose.connect('mongodb+srv://monajackson98:Kc9gZY2EAkj5mIs9@cluster0.uxhruuc.
 
 //Creating Schema
 const userSchema = new mongoose.Schema({
+    username: String,
     userFirstName: String,
     userLastName: String,
     password: String,
@@ -33,7 +34,30 @@ const userSchema = new mongoose.Schema({
 })
 
 //Creating Model
-const user = mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema)
+
+//Routes
+
+app.post('/api/register', async (req,res)=>{
+
+    try
+    {
+        const {username,password} = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10); //10 char password
+        const newUser = new User({ username, 
+            userFirstName, 
+            userLastName,
+            password: hashedPassword,
+            idNumber,
+            accountNumber});
+        await newUser.save();
+        res.status(201).send('User registered successfully');
+    }
+    catch(error)
+    {
+        res.status(500).send('Error registering user');
+    }
+})
 
 const PORT = process.env.PORT || 5000;
 
