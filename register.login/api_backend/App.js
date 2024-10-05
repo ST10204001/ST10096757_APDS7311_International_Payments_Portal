@@ -38,28 +38,35 @@ const User = mongoose.model('User', userSchema)
 
 //Routes
 
-app.post('/api/register', async (req,res)=>{
+app.post('/api/register', async (req, res) => {
+    try {
+        const { username, password, userFirstName, userLastName, idNumber, accountNumber} = req.body;
 
-    try
-    {
-        const {username,password} = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10); //10 char password
+        // Check if username already exists
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).send('Username already exists');
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({ username, 
             userFirstName, 
             userLastName,
             password: hashedPassword,
             idNumber,
             accountNumber});
-        await newUser.save();
-        res.status(201).send('User registered successfully');
-    }
-    catch(error)
-    {
-        res.status(500).send('Error registering user');
-    }
-})
+            await newUser.save().catch(err => {
+                console.error('Error saving user:', err);
+            });
 
-const PORT = process.env.PORT || 5000;
+        res.status(201).send('User registered successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error registering user: ' + error.message);
+    }
+});
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
