@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser'); // for authentication purposes
@@ -7,6 +8,8 @@ const bcrypt = require('bcrypt'); // for hashing passwords and encryption
 const app = express();
 
 // Middleware
+// Enable CORS for all routes
+app.use(cors());
 app.use(express.json()); // for sending and receiving data
 app.use(cookieParser()); // for parsing cookies
 
@@ -84,6 +87,13 @@ app.post('/api/login', async (req, res) => {
       res.status(500).send('Error logging in user: ' + error.message);
     }
   });
+
+  //Logout
+app.post('/api/logout', async (req, res) => {
+     res.clearCookie('userToken');
+     res.status(200).send('Logout successfully');
+  });
+
 
 const PORT = process.env.PORT || 3000;
 
