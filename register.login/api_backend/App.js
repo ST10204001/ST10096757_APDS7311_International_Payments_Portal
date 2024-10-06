@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema)
 
 //Routes
-
+//Register
 app.post('/api/register', async (req, res) => {
     try {
         const { username, password, userFirstName, userLastName, idNumber, accountNumber} = req.body;
@@ -65,6 +65,25 @@ app.post('/api/register', async (req, res) => {
         res.status(500).send('Error registering user: ' + error.message);
     }
 });
+
+//Login
+app.post('/api/login', async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      const user = await User.findOne({ username });
+  
+      if (user && (await bcrypt.compare(password, user.password)))   
+   {
+        res.cookie('userToken', user._id.toString(), { httpOnly: true });
+        res.status(200).send('Login successfully');
+      } else {
+        res.status(401).send('Invalid Credentials');
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error logging in user: ' + error.message);
+    }
+  });
 
 const PORT = process.env.PORT || 3000;
 
