@@ -47,7 +47,19 @@ const Dashboard=()=>{
 
     return(
         <>
-            <h2>Welcome {userName} </h2>
+            <h1>Welcome {userName} </h1>
+            <br />
+            <h2>Transaction</h2>
+            <label>Amount:</label>
+            <br/>
+            <label>Currency:</label>
+            <br/> 
+            <label>
+                Payment Provider: 
+            </label>
+            <br />
+           <button type="submit">Pay</button>
+           <br/> 
             <button onClick={handleLogout}>Logout</button>
         </>
     )
