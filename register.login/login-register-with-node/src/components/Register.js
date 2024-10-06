@@ -1,6 +1,7 @@
 // Register.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [username,setUserName]=useState('');
@@ -9,29 +10,42 @@ const Register = () => {
     const [userLastName,setUserLastName]=useState('');
     const [idNumber,setIdNumber]=useState('');
     const [accountNumber,setAccountNumber]=useState('');
+
+    let redirect = useNavigate();
     
 
     const handleRegister = async (event)=>{
         event.preventDefault(); // Prevent the default form submission behavior
 
         const data = {
-            userName:username,     
-            userFirstName: userFirstName,
-            userLastName: userLastName,
-            password:password,
-            idNumber: idNumber,
-            accountNumber: accountNumber
+            username, // Correct casing
+            userFirstName,
+            userLastName,
+            password,
+            idNumber,
+            accountNumber
         }
-        try{
-            await axios.post('http://localhost:3000/api/register',data);
-            console.log('Registered Successfully');
-            alert('Registered Successfully');
-    
+
+     
+    try {
+        const response = await axios.post('http://localhost:3000/api/register', data);
+
+        // Check if the response contains the success message
+        if (response.data.message) {
+            alert(response.data.message); // Show success message
+            redirect('/login');
         }
-        catch(error){
-            console.log('There is something wrong in registration',error);
-            alert('Registration Failed');
+    } catch (error) {
+        console.log('Error details:', error); // Log the error to see the structure
+        if (error.response && error.response.data && error.response.data.error) {
+            // Show the specific error message from the backend
+            alert(error.response.data.error);
+        } else {
+            // General error handling
+            alert('An error occurred during registration.');
         }
+    }
+            
     }
 
     return (

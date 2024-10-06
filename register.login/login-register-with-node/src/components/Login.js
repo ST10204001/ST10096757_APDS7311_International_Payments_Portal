@@ -27,13 +27,13 @@ const handleRegister = async ()=>{
               redirect('/dashboard');
            }
            else{
-             alert('Sorry Invalid Login');
+             alert('Sorry Invalid Login😭😭');
            }
         })
 
     }
     catch(error){
-         alert('Sorry Invalid Login');
+         alert('Sorry Invalid Login😭😭');
     }
 }
 
