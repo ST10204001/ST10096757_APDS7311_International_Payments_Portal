@@ -9,7 +9,10 @@ const app = express();
 
 // Middleware
 // Enable CORS for all routes
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3001', // Specify the frontend URL
+    credentials: true, // Enable sending cookies or HTTP credentials
+  }));
 app.use(express.json()); // for sending and receiving data
 app.use(cookieParser()); // for parsing cookies
 
@@ -91,7 +94,36 @@ app.post('/api/login', async (req, res) => {
   //Logout
 app.post('/api/logout', async (req, res) => {
      res.clearCookie('userToken');
-     res.status(200).send('Logout successfully');
+     res.status(200).send('Logout successful');
+  });
+
+  const authenticateUser= async (req,res,next)=>{
+    const userId = req.cookies.userToken;
+
+    if (!userId) {
+        return res.status(401).send('Unauthorized');
+      }
+
+    try{
+       const user = await User.findById(userId);
+
+       if (!user) {
+        return res.status(401).send('Unauthorized');
+        
+      }
+      else{
+        const users={
+          userName:user.userName
+        }
+         return res.status(201).json(users);
+      }
+    }
+      catch (error) {
+        res.status(500).send('Error authenticating user');
+      }
+}
+
+  app.get('/dashboard', authenticateUser, (req, res) => {
   });
 
 
