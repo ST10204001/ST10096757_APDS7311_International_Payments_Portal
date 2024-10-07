@@ -1,10 +1,8 @@
-import express from 'express'; // Keep this as it is
+import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import cookieParser from 'cookie-parser'; // for authentication purposes
-import bcrypt from 'bcrypt'; // for hashing passwords and encryption
-import https from 'https';
-import fs from 'fs';
+import cookieParser from 'cookie-parser';
+import bcrypt from 'bcrypt';
 import helmet from 'helmet';
 import expressBrute from 'express-brute';
 import rateLimit from 'express-rate-limit';
@@ -17,13 +15,13 @@ app.use(cors({
     credentials: true, // Enable sending cookies or HTTP credentials
 }));
 app.use(helmet()); // Protect against vulnerabilities
-app.use(express.json()); // for sending and receiving data
-app.use(cookieParser()); // for parsing cookies
+app.use(express.json()); // For sending and receiving data
+app.use(cookieParser()); // For parsing cookies
 
 // Rate Limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per window
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per window
 });
 
 // Apply rate limiting to all requests
@@ -31,22 +29,22 @@ app.use(limiter);
 
 const memoryStore = new expressBrute.MemoryStore(); // In-memory store
 const bruteforce = new expressBrute(memoryStore, {
-  freeRetries: 5,
-  minWait: 5000,
-  maxWait: 60000,
-  lifetime: 3600,
+    freeRetries: 5,
+    minWait: 5000,
+    maxWait: 60000,
+    lifetime: 3600,
 });
 
 // MongoDB Connection
-mongoose.connect('mongodb+srv://monajackson98:Kc9gZY2EAkj5mIs9@cluster0.uxhruuc.mongodb.net/myDatabase?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://monajackson98:Kc9gZY2EAkj5mIs9@cluster0.uxhruuc.mongodb.net/', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
 .then(() => {
-    console.log('Database running successfully');  // Success message
+    console.log('Database running successfully');
 })
 .catch(error => {
-    console.log('There is a connection error:', error); // Log the entire error object
+    console.log('There is a connection error:', error);
 });
 
 // Creating Schema
@@ -94,7 +92,7 @@ function validateInput({ username, password, userFirstName, userLastName, idNumb
 
 // Routes
 // Register
-app.post('/api/register',  bruteforce.prevent, async (req, res) => {
+app.post('/api/register', bruteforce.prevent, async (req, res) => {
     try {
         const { username, password, userFirstName, userLastName, idNumber, accountNumber } = req.body;
 
@@ -129,7 +127,7 @@ app.post('/api/register',  bruteforce.prevent, async (req, res) => {
 });
 
 // Login
-app.post('/api/login',  bruteforce.prevent, async (req, res) => {
+app.post('/api/login', bruteforce.prevent, async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({ username });
@@ -167,7 +165,7 @@ const authenticateUser = async (req, res) => {
             return res.status(401).send('Unauthorized');
         } else {
             const users = {
-                userName: user.username // Ensure this is the correct field
+                userName: user.username
             };
             return res.status(201).json(users);
         }
@@ -186,30 +184,5 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'UP' });
 });
 
-// Load SSL certificate and key
-const sslOptions = {
-    key: fs.readFileSync('./keys/private.key'), 
-    cert: fs.readFileSync('./keys/certificate.crt'),
-};
-
-const PORT = process.env.PORT || 3000;
-
-// Create HTTPS server
-const server = https.createServer(sslOptions, app);
-
-server.listen(PORT, () => {
-    console.log(`Server is running on https://localhost:${PORT}`);
-});
-
-// Proper cleanup on server shutdown
-process.on('SIGINT', async () => {
-    await mongoose.connection.close();
-    console.log('MongoDB connection closed');
-    process.exit(0);
-});
-
-process.on('SIGTERM', async () => {
-    await mongoose.connection.close();
-    console.log('MongoDB connection closed');
-    process.exit(0);
-});
+// Export the app for use in server.js
+export default app;
