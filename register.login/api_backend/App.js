@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'; // Keep this as it is
 import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser'; // for authentication purposes
