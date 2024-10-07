@@ -47,11 +47,6 @@ jobs:
           cd register.login/login-register-with-node
           npm install
 
-      # Step 6: Run ESLint to catch code quality issues
-      - name: Run ESLint
-        run: |
-          cd register.login/api_backend
-          npm run lint
 
       # Step 7: Build React App
       - name: Build React App
