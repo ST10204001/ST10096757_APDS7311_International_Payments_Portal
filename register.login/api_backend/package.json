@@ -2,6 +2,7 @@
   "name": "register",
   "version": "1.0.0",
   "main": "App.js",
+  "type": "module", 
   "scripts": {
     "test": "mocha",
     "lint": "eslint .",
