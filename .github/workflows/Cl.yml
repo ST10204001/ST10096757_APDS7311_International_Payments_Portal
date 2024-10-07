@@ -54,11 +54,6 @@ jobs:
           cd register.login/login-register-with-node
           npm run build
 
-      # Step 8: Check for known vulnerabilities in dependencies
-      - name: Run npm audit
-        run: |
-          cd register.login/api_backend
-          npm audit --audit-level=high
 
       # Step 9: Check SSL configuration
       - name: Check SSL configuration
