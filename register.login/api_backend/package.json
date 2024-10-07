@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "App.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha", 
+    "lint": "eslint .",
+    "build": "react-scripts build",
     "start": "nodemon App.js"
   },
   "author": "",
@@ -14,7 +16,15 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.21.0",
+    "express-brute": "^1.0.1",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
     "mongoose": "^8.7.0",
     "nodemon": "^3.1.7"
+  },
+  "devDependencies": {
+    "eslint": "^8.40.0", 
+    "mocha": "^10.2.0", 
+    "react-scripts": "^5.0.1" 
   }
 }
