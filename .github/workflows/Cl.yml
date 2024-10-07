@@ -52,8 +52,8 @@ jobs:
         run: |
           cd register.login/api_backend
           ls -l ./keys  # List the contents of the keys directory
-          chmod 644 ./keys/privatekey.pem
-          chmod 644 ./keys/certificate.pem
+          chmod 644 ./keys/private.key
+          chmod 644 ./keys/certificate.crt
 
       # Step 7: Build React App
       - name: Build React App
@@ -65,7 +65,7 @@ jobs:
       - name: Check SSL configuration
         run: |
           cd register.login/api_backend
-          if [ ! -f ./keys/privatekey.pem ] || [ ! -f ./keys/certificate.pem ]; then
+          if [ ! -f ./keys/private.key ] || [ ! -f ./keys/certificate.crt ]; then
             echo "SSL certificate or key missing" && exit 1
           fi
 
