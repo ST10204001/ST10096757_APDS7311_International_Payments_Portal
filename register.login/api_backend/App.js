@@ -6,6 +6,10 @@ const cookieParser = require('cookie-parser'); // for authentication purposes
 const bcrypt = require('bcrypt'); // for hashing passwords and encryption
 const https = require('https');
 const fs = require('fs');
+const helmet = require('helmet');
+const expressBrute = require('express-brute');
+const memoryStore = new expressBrute.MemoryStore(); // In-memory store
+const rateLimit = require('express-rate-limit'); // Import express-rate-limit
 
 const app = express();
 
@@ -15,8 +19,25 @@ app.use(cors({
     origin: 'http://localhost:3001', // Specify the frontend URL
     credentials: true, // Enable sending cookies or HTTP credentials
 }));
+app.use(helmet()); // Protect against vulnerabilities
 app.use(express.json()); // for sending and receiving data
 app.use(cookieParser()); // for parsing cookies
+
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per window
+});
+
+// Apply rate limiting to all requests
+app.use(limiter);
+
+const bruteforce = new expressBrute(memoryStore, {
+  freeRetries: 5,
+  minWait: 5000,
+  maxWait: 60000,
+  lifetime: 3600,
+});
 
 const dbName = 'myDatabase'; 
 // MongoDB Connection
@@ -165,6 +186,13 @@ app.post('/api/logout', async (req, res) => {
   app.get('/dashboard', authenticateUser, (req, res) => {
   });
 
+  
+// Health Check
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'UP' });
+});
+
+
   // Load SSL certificate and key
   const sslOptions = {
     key: fs.readFileSync('./keys/private.key'), 
@@ -178,5 +206,18 @@ const server = https.createServer(sslOptions, app);
 
 server.listen(PORT, () => {
     console.log(`Server is running on https://localhost:${PORT}`);
+});
+
+// Proper cleanup on server shutdown
+process.on('SIGINT', async () => {
+  await mongoose.connection.close();
+  console.log('MongoDB connection closed');
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  await mongoose.connection.close();
+  console.log('MongoDB connection closed');
+  process.exit(0);
 });
 
