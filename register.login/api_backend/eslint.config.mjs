@@ -8,17 +8,19 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
-        require: "readonly", // Allow 'require' as a global
-        process: "readonly", // Allow 'process' as a global
+        require: "readonly", // Add require as a global
+        process: "readonly", // If you use process
       },
       parserOptions: {
-        ecmaVersion: 12, // Use ECMAScript 2021
+        ecmaVersion: 12,
         sourceType: "script", // Allow CommonJS syntax
       },
-      settings: {
-        react: {
-          version: "detect", // Automatically detect React version
-        },
+    },
+  },
+  {
+    settings: {
+      react: {
+        version: "detect", // Automatically detect React version
       },
     },
   },
