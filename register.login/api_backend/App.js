@@ -1,20 +1,17 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser'); // for authentication purposes
-const bcrypt = require('bcrypt'); // for hashing passwords and encryption
-const https = require('https');
-const fs = require('fs');
-const helmet = require('helmet');
-const expressBrute = require('express-brute');
-const memoryStore = new expressBrute.MemoryStore(); // In-memory store
-const rateLimit = require('express-rate-limit'); // Import express-rate-limit
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser'; // for authentication purposes
+import bcrypt from 'bcrypt'; // for hashing passwords and encryption
+import https from 'https';
+import fs from 'fs';
+import helmet from 'helmet';
+import expressBrute from 'express-brute';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 
 // Middleware
-// Enable CORS for all routes
 app.use(cors({
     origin: 'http://localhost:3001', // Specify the frontend URL
     credentials: true, // Enable sending cookies or HTTP credentials
@@ -32,6 +29,7 @@ const limiter = rateLimit({
 // Apply rate limiting to all requests
 app.use(limiter);
 
+const memoryStore = new expressBrute.MemoryStore(); // In-memory store
 const bruteforce = new expressBrute(memoryStore, {
   freeRetries: 5,
   minWait: 5000,
@@ -39,7 +37,6 @@ const bruteforce = new expressBrute(memoryStore, {
   lifetime: 3600,
 });
 
-const dbName = 'myDatabase'; 
 // MongoDB Connection
 mongoose.connect('mongodb+srv://monajackson98:Kc9gZY2EAkj5mIs9@cluster0.uxhruuc.mongodb.net/myDatabase?retryWrites=true&w=majority', {
     useNewUrlParser: true,
@@ -52,7 +49,7 @@ mongoose.connect('mongodb+srv://monajackson98:Kc9gZY2EAkj5mIs9@cluster0.uxhruuc.
     console.log('There is a connection error:', error); // Log the entire error object
 });
 
-//Creating Schema
+// Creating Schema
 const userSchema = new mongoose.Schema({
     username: String,
     userFirstName: String,
@@ -60,10 +57,10 @@ const userSchema = new mongoose.Schema({
     password: String,
     idNumber: String,
     accountNumber: String
-})
+});
 
-//Creating Model
-const User = mongoose.model('User', userSchema)
+// Creating Model
+const User = mongoose.model('User', userSchema);
 
 // Helper function to validate input using RegEx patterns
 function validateInput({ username, password, userFirstName, userLastName, idNumber, accountNumber }) {
@@ -95,18 +92,17 @@ function validateInput({ username, password, userFirstName, userLastName, idNumb
     return null; // All inputs are valid
 }
 
-
-//Routes
-//Register
-app.post('/api/register', async (req, res) => {
+// Routes
+// Register
+app.post('/api/register',  bruteforce.prevent, async (req, res) => {
     try {
-        const { username, password, userFirstName, userLastName, idNumber, accountNumber} = req.body;
+        const { username, password, userFirstName, userLastName, idNumber, accountNumber } = req.body;
 
-         // Validate inputs using RegEx
-         const validationError = validateInput({ username, password, userFirstName, userLastName, idNumber, accountNumber });
-         if (validationError) {
+        // Validate inputs using RegEx
+        const validationError = validateInput({ username, password, userFirstName, userLastName, idNumber, accountNumber });
+        if (validationError) {
             return res.status(400).json({ error: validationError }); // Send validation error message as JSON
-         }
+        }
 
         // Check if username already exists
         const existingUser = await User.findOne({ username });
@@ -115,86 +111,83 @@ app.post('/api/register', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ username, 
+        const newUser = new User({ 
+            username, 
             userFirstName, 
             userLastName,
             password: hashedPassword,
             idNumber,
-            accountNumber});
-            await newUser.save().catch(err => {
-                console.error('Error saving user:', err);
-            });
+            accountNumber
+        });
+        await newUser.save();
 
-            res.status(201).json({ message: 'User registered successfully' });
+        res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error registering user: ' + error.message }); 
     }
 });
 
-//Login
-app.post('/api/login', async (req, res) => {
+// Login
+app.post('/api/login',  bruteforce.prevent, async (req, res) => {
     try {
-      const { username, password } = req.body;
-      const user = await User.findOne({ username });
-  
-      if (user && (await bcrypt.compare(password, user.password)))   
-   {
-        res.cookie('userToken', user._id.toString(), { httpOnly: true });
-        res.status(200).send('Login successfully');
-      } else {
-        res.status(401).send('Invalid Credentials');
-      }
+        const { username, password } = req.body;
+        const user = await User.findOne({ username });
+
+        if (user && (await bcrypt.compare(password, user.password))) {
+            res.cookie('userToken', user._id.toString(), { httpOnly: true });
+            res.status(200).send('Login successfully');
+        } else {
+            res.status(401).send('Invalid Credentials');
+        }
     } catch (error) {
-      console.error(error);
-      res.status(500).send('Error logging in user: ' + error.message);
+        console.error(error);
+        res.status(500).send('Error logging in user: ' + error.message);
     }
-  });
+});
 
-  //Logout
-app.post('/api/logout', async (req, res) => {
-     res.clearCookie('userToken');
-     res.status(200).send('Logout successful');
-  });
+// Logout
+app.post('/api/logout', (req, res) => {
+    res.clearCookie('userToken');
+    res.status(200).send('Logout successful');
+});
 
-  const authenticateUser= async (req,res,next)=>{
+// Authenticate User
+const authenticateUser = async (req, res) => {
     const userId = req.cookies.userToken;
 
     if (!userId) {
         return res.status(401).send('Unauthorized');
-      }
-
-    try{
-       const user = await User.findById(userId);
-
-       if (!user) {
-        return res.status(401).send('Unauthorized');
-        
-      }
-      else{
-        const users={
-          userName:user.userName
-        }
-         return res.status(201).json(users);
-      }
     }
-      catch (error) {
+
+    try {
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(401).send('Unauthorized');
+        } else {
+            const users = {
+                userName: user.username // Ensure this is the correct field
+            };
+            return res.status(201).json(users);
+        }
+    } catch (error) {
         res.status(500).send('Error authenticating user');
-      }
-}
+    }
+};
 
-  app.get('/dashboard', authenticateUser, (req, res) => {
-  });
-
-  
-// Health Check
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'UP' });
+// Dashboard route
+app.get('/dashboard', authenticateUser, (req, res) => {
+    res.status(200).send('Dashboard access granted');
 });
 
+// Health Check
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'UP' });
+});
 
-  // Load SSL certificate and key
-  const sslOptions = {
+// Load SSL certificate and key
+const sslOptions = {
     key: fs.readFileSync('./keys/private.key'), 
     cert: fs.readFileSync('./keys/certificate.crt'),
 };
@@ -210,14 +203,13 @@ server.listen(PORT, () => {
 
 // Proper cleanup on server shutdown
 process.on('SIGINT', async () => {
-  await mongoose.connection.close();
-  console.log('MongoDB connection closed');
-  process.exit(0);
+    await mongoose.connection.close();
+    console.log('MongoDB connection closed');
+    process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  await mongoose.connection.close();
-  console.log('MongoDB connection closed');
-  process.exit(0);
+    await mongoose.connection.close();
+    console.log('MongoDB connection closed');
+    process.exit(0);
 });
-
