@@ -23,7 +23,7 @@ const handleRegister = async ()=>{
             withCredentials: true,
     })
         .then((res)=>{
-           if(res.status==200){
+           if(res.status===200){
               redirect('/dashboard');
            }
            else{
