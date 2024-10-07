@@ -2,6 +2,7 @@ import app from './App.js';
 import https from 'https';
 import http from 'http';
 import fs from 'fs';
+import mongoose from 'mongoose';
 
 // Load SSL certificate and key
 const sslOptions = {
@@ -28,14 +29,14 @@ httpsServer.listen(PORT, () => {
 });
 
 // Proper cleanup on server shutdown
-process.on('SIGINT', async () => {
-    await mongoose.connection.close();
+/*process.on('SIGINT', async () => {
+    await mongoose.connection.close(); // Now this should work
     console.log('MongoDB connection closed');
     process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-    await mongoose.connection.close();
+    await mongoose.connection.close(); // Now this should work
     console.log('MongoDB connection closed');
     process.exit(0);
-});
+});*/
