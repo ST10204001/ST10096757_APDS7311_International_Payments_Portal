@@ -25,7 +25,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: List directory contents for debugging
+       # Step 2: List directory contents for debugging
       - name: List directory contents
         run: ls -R
 
@@ -47,10 +47,11 @@ jobs:
           cd register.login/login-register-with-node
           npm install
 
-      # Step 6: Set permissions for SSL files
+       # Step 6: Set permissions for SSL files
       - name: Set permissions for SSL files
         run: |
           cd register.login/api_backend
+          ls -l ./keys  # List the contents of the keys directory
           chmod 644 ./keys/privatekey.pem
           chmod 644 ./keys/certificate.pem
 
