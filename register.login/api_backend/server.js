@@ -11,19 +11,22 @@ const sslOptions = {
 };
 
 // Create HTTP server for redirection
-const httpServer = http.createServer(app);
-httpServer.listen(3000, () => {
-    console.log('HTTP server running on port 3000');
-});
-
-httpServer.on('request', (req, res) => {
+const httpServer = http.createServer((req, res) => {
+    // Redirect all HTTP requests to HTTPS
     res.writeHead(301, { "Location": `https://${req.headers.host}${req.url}` });
     res.end();
 });
 
+// Start the HTTP server
+httpServer.listen(3000, () => {
+    console.log('HTTP server running on port 3000');
+});
+
 // Create HTTPS server
-const PORT = process.env.PORT || 3443;
+const PORT = process.env.PORT || 3443; // Change to 3443 or your desired HTTPS port
 const httpsServer = https.createServer(sslOptions, app);
+
+// Start the HTTPS server
 httpsServer.listen(PORT, () => {
     console.log(`HTTPS server running on port ${PORT}`);
 });
