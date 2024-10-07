@@ -27,3 +27,4 @@ export default [
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
 ];
+
