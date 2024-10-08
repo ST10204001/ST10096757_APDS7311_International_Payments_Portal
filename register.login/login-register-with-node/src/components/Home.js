@@ -53,7 +53,7 @@ const Home=()=>{
         <div className="content justify-content-center align-items-center d-flex shadow-lg" id="content">
         <div className="col-md-6 d-flex justify-cintent-center">
         <form>
-            <h1>Welcome {userName} </h1>
+            <h1>Welcome  </h1>
             <br />
             <button onClick={handleTransaction}>Make a transaction</button>
            <br/> 
