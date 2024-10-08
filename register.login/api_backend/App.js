@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import helmet from 'helmet';
 import expressBrute from 'express-brute';
 import rateLimit from 'express-rate-limit';
+import xssClean from 'xss-clean'; // XSS protection middleware
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors({
     credentials: true, // Enable sending cookies or HTTP credentials
 }));
 app.use(helmet()); // Protect against vulnerabilities
+app.use(xssClean()); // Protect against XSS attacks
 app.use(express.json()); // For sending and receiving data
 app.use(cookieParser()); // For parsing cookies
 
@@ -26,6 +28,12 @@ const limiter = rateLimit({
 
 // Apply rate limiting to all requests
 app.use(limiter);
+
+// Set Strict-Transport-Security header for HSTS
+app.use((req, res, next) => {
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains"); // HSTS
+    next();
+});
 
 const memoryStore = new expressBrute.MemoryStore(); // In-memory store
 const bruteforce = new expressBrute(memoryStore, {
