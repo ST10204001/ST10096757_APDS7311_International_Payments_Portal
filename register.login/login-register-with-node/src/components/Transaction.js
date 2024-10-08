@@ -1,10 +1,10 @@
 // Transaction.js
-import axios from "axios";
-import { useEffect,useState } from "react";
-import { useNavigate } from 'react-router-dom';
+//import axios from "axios";
+//import { useEffect,useState } from "react";
+//import { useNavigate } from 'react-router-dom';
 
 const Transaction=()=>{
-    let redirect = useNavigate();
+    //let redirect = useNavigate();
     //const [isLoggedIn, setIsLoggedIn] = useState(true);
     //const [userName, setUserName]=useState('');
     useEffect(()=>{
