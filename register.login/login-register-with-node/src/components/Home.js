@@ -1,9 +1,9 @@
-// Transaction.js
+// Home.js
 import axios from "axios";
 import { useEffect,useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-const Transaction=()=>{
+const Home=()=>{
     let redirect = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const [userName, setUserName]=useState('');
@@ -45,25 +45,23 @@ const Transaction=()=>{
         redirect ("/login");
       }
 
+    const handleTransaction = async()=>{
+        redirect('/transaction');
+    }  
+
     return(
         <div className="content justify-content-center align-items-center d-flex shadow-lg" id="content">
         <div className="col-md-6 d-flex justify-cintent-center">
         <form>
-            <h1>Transaction</h1>
-            <label>Amount:</label>
-            <br/>
-            <label>Currency:</label>
-            <br/> 
-            <label>
-                Payment Provider: 
-            </label>
+            <h1>Welcome {userName} </h1>
             <br />
-           <button type="submit">Pay</button>
+            <button onClick={handleTransaction}>Make a transaction</button>
            <br/> 
+            <button onClick={handleLogout}>Logout</button>
         </form>
         </div>
         </div>
     )
 }
 
-export default Transaction;
+export default Home;

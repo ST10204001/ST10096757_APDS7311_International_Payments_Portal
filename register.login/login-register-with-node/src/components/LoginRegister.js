@@ -27,7 +27,7 @@ const LoginRegister = () => {
         }
      
     try {
-        const response = await axios.post('https://localhost:3000/api/register', data);
+        const response = await axios.post('https://localhost:3001/api/register', data);
 
         // Check if the response contains the success message
         if (response.data.message) {
@@ -57,12 +57,12 @@ const LoginRegister = () => {
         } 
 
         try{
-            await axios.post('https://localhost:3000/api/login', data , {
+            await axios.post('https://localhost:3001/api/login', data , {
                 withCredentials: true,
         })
             .then((res)=>{
               if(res.status===200){
-                  redirect('/dashboard');
+                  redirect('/home');
               }
               else{
                 alert('Sorry Invalid Login😭😭');
