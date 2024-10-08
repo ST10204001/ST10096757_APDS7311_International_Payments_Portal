@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+import cookieSession from 'cookie-session';
 import bcrypt from 'bcryptjs';
 import helmet from 'helmet';
 import expressBrute from 'express-brute';
@@ -21,6 +22,11 @@ app.use(helmet({
 app.use(xssClean()); // Protect against XSS attacks
 app.use(express.json()); // For sending and receiving data
 app.use(cookieParser()); // For parsing cookies
+app.use(cookieSession({
+    name: 'session',
+    keys: ['your_secret_key'], // Use a strong secret key
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 
 // Rate Limiting
 const limiter = rateLimit({
