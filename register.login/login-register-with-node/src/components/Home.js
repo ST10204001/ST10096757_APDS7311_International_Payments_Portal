@@ -7,10 +7,10 @@ const Home=()=>{
     let redirect = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const [userName, setUserName]=useState('');
-    useEffect(()=>{
-        checkAuthentication();
-    },
-    []
+     useEffect(()=>{
+    //     checkAuthentication();
+ },
+     []
     )
      const checkAuthentication= async()=>{
          try{

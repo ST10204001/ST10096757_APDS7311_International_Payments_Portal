@@ -14,37 +14,39 @@ const LoginRegister = () => {
     let redirect = useNavigate();
 
      /*----------------------------- Register Function ----------------------------------*/
-    const handleRegister = async (event)=>{
-        event.preventDefault(); // Prevent the default form submission behavior
-
-        const data = {
-            username, 
-            userFirstName,
-            userLastName,
-            password,
-            idNumber,
-            accountNumber,
-        }
-     
-    try {
-        const response = await axios.post('https://localhost:3001/api/register', data);
-
-        // Check if the response contains the success message
-        if (response.data.message) {
-            alert(response.data.message); // Show success message
-            redirect('/login');
-        }
-    } catch (error) {
-        console.log('Error details:', error); // Log the error to see the structure
-        if (error.response && error.response.data && error.response.data.error) {
-            // Show the specific error message from the backend
-            alert(error.response.data.error);
-        } else {
-            // General error handling
-            alert('An error occurred during registration.');
-        }
-    } 
-  }
+     const handleRegister = async (event) => {
+      event.preventDefault(); // Prevent the default form submission behavior
+  
+      const data = {
+          username,
+          userFirstName,
+          userLastName,
+          password,
+          idNumber,
+          accountNumber,
+      };
+  
+      try {
+          const response = await axios.post('https://localhost:3001/api/register', data, {
+              withCredentials: true, // Include credentials in the request
+          });
+  
+          // Check if the response contains the success message
+          if (response.data.message) {
+              alert(response.data.message); // Show success message
+              redirect('/login');
+          }
+      } catch (error) {
+          console.log('Error details:', error); // Log the error to see the structure
+          if (error.response && error.response.data && error.response.data.error) {
+              // Show the specific error message from the backend
+              alert(error.response.data.error);
+          } else {
+              // General error handling
+              alert('An error occurred during registration.');
+          }
+      }
+  };
 
      /*----------------------------- Login Function ----------------------------------*/
     const handleLogin = async (event)=>{
