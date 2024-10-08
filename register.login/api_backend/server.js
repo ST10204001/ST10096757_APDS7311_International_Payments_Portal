@@ -23,7 +23,7 @@ httpServer.listen(3000, () => {
 });
 
 // Create HTTPS server
-const PORT = process.env.PORT || 3443; // Change to 3443 or your desired HTTPS port
+const PORT = process.env.PORT || 3001; 
 const httpsServer = https.createServer(sslOptions, app);
 
 // Start the HTTPS server

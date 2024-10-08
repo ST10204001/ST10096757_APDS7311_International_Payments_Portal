@@ -52,8 +52,7 @@ const bruteforce = new expressBrute(memoryStore, {
 });
 
 // MongoDB Connection
-mongoose.connect('mongodb+srv://monajackson98:Kc9gZY2EAkj5mIs9@cluster0.uxhruuc.mongodb.net/', {
-
+mongoose.connect('mongodb+srv://monajackson98:Kc9gZY2EAkj5mIs9@cluster0.uxhruuc.mongodb.net/myDatabase', {
 })
 .then(() => {
     console.log('Database running successfully');
