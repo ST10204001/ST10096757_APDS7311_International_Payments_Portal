@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect,useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-const Dashboard=()=>{
+const Transaction=()=>{
     let redirect = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const [userName, setUserName]=useState('');
@@ -65,4 +65,4 @@ const Dashboard=()=>{
     )
 }
 
-export default Dashboard;
+export default Transaction;
