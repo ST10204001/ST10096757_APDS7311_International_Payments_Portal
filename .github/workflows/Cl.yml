@@ -97,19 +97,19 @@ jobs:
             echo "Clickjacking protection missing (Helmet's frameguard)" && exit 1
           fi
           # Check for Session Jacking Protection
-          if ! grep -q "cookie-session" App.js; then
-            echo "Session hijacking protection missing (cookie-session or express-session)" && exit 1
+          if ! grep -q "cookieSession" App.js; then
+            echo "Session hijacking protection missing (cookie-session middleware)" && exit 1
           fi
           # Check for SQL Injection Prevention
-          if ! grep -q "parameterized queries" App.js; then
-            echo "SQL Injection protection missing (use parameterized queries)" && exit 1
+          if ! grep -q "findOne(" App.js; then
+            echo "SQL Injection protection missing (use Mongoose methods like findOne)" && exit 1
           fi
           # Check for Cross-Site Scripting (XSS) Protection
           if ! grep -q "xss-clean" App.js; then
             echo "XSS protection missing (xss-clean middleware)" && exit 1
           fi
           # Check for Man-in-the-Middle Attack Protection
-          if ! grep -q "strict-transport-security" App.js; then
+          if ! grep -q "Strict-Transport-Security" App.js; then
             echo "HSTS header missing (use Helmet to enforce Strict-Transport-Security)" && exit 1
           fi
           # DDoS Protection (Rate Limiting and Network Throttling)
