@@ -124,3 +124,13 @@ jobs:
         with:
           name: test-results
           path: ./test-results
+
+      # Step 14: Check for Environment Variables
+      - name: Check for Environment Variables
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "DATABASE_URL is not set" && exit 1
+          fi
+          if [ -z "$SECRET_KEY" ]; then
+            echo "SECRET_KEY is not set" && exit 1
+          fi
