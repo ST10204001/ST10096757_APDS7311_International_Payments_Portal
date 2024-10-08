@@ -11,6 +11,9 @@ The International Payment System (IPS) is designed for a bank's online banking s
 
 However for this part of the POE, the requirements for the app is to allow customers to register and login into the website.
 
+	-- YouTube Link --
+ https://youtu.be/ogxKLvq_At0
+
 	-- FEATURES --
 - Customer Registration: Users can register by providing their full name, ID number, account number, and password.
 - User Authentication: Customers can log in using their username, account number, and password.
