@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom';
 
 const Transaction=()=>{
     let redirect = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
-    const [userName, setUserName]=useState('');
+    //const [isLoggedIn, setIsLoggedIn] = useState(true);
+    //const [userName, setUserName]=useState('');
     useEffect(()=>{
      //   checkAuthentication();
     },
     []
     )
-     const checkAuthentication= async()=>{
+     /*const checkAuthentication= async()=>{
          try{
             await axios.get('http://localhost:3000/dashboard',{
                 withCredentials: true,
@@ -24,9 +24,9 @@ const Transaction=()=>{
          catch(error){
             setIsLoggedIn(false);
          }
-    }
+    }*/
 
-    const handleLogout= async()=>{
+    /*const handleLogout= async()=>{
         try {
             await axios.post('http://localhost:3000/api/logout', {},
             {
@@ -39,7 +39,7 @@ const Transaction=()=>{
         catch(error){
              console.error('Error logging out:', error.response.data);
         }
-    }
+    }*/
 
       if(!isLoggedIn) {
         redirect ("/login");
