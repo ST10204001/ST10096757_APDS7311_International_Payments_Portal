@@ -12,7 +12,7 @@ const Home=()=>{
  },
      []
     )
-     const checkAuthentication= async()=>{
+     /*const checkAuthentication= async()=>{
          try{
             await axios.get('http://localhost:3000/dashboard',{
                 withCredentials: true,
@@ -24,7 +24,7 @@ const Home=()=>{
          catch(error){
             setIsLoggedIn(false);
          }
-    }
+    }*/
 
     const handleLogout= async()=>{
         try {
