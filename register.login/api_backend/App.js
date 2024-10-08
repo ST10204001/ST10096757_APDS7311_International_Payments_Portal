@@ -15,7 +15,9 @@ app.use(cors({
     origin: 'http://localhost:3001', // Specify the frontend URL
     credentials: true, // Enable sending cookies or HTTP credentials
 }));
-app.use(helmet()); // Protect against vulnerabilities
+app.use(helmet({
+    frameguard: { action: 'deny' } // Enable Clickjacking protection
+})); 
 app.use(xssClean()); // Protect against XSS attacks
 app.use(express.json()); // For sending and receiving data
 app.use(cookieParser()); // For parsing cookies
