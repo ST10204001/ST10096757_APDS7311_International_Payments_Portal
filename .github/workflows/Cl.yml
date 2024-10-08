@@ -47,13 +47,13 @@ jobs:
           cd register.login/login-register-with-node
           npm install
 
-      # Step 6: Set permissions for SSL files
-      - name: Set permissions for SSL files
+      # Step 6: Set SSL options
+      - name: Set SSL options
         run: |
           cd register.login/api_backend
           ls -l ./keys  # List the contents of the keys directory
-          chmod 644 ./keys/private.key
-          chmod 644 ./keys/certificate.crt
+          chmod 644 ./keys/server.KEY
+          chmod 644 ./keys/server.crt
 
       # Step 7: Build React App
       - name: Build React App
