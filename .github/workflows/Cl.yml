@@ -93,11 +93,11 @@ jobs:
         run: |
           cd register.login/api_backend
           # Check for Clickjacking Protection
-          if ! grep -q "frameguard" app.js; then
+          if ! grep -q "frameguard" App.js; then
             echo "Clickjacking protection missing (Helmet's frameguard)" && exit 1
           fi
           # Check for Session Jacking Protection
-          if ! grep -q "cookie-session" app.js; then
+          if ! grep -q "cookie-session" App.js; then
             echo "Session hijacking protection missing (cookie-session or express-session)" && exit 1
           fi
           # Check for SQL Injection Prevention
@@ -105,15 +105,15 @@ jobs:
             echo "SQL Injection protection missing (use parameterized queries)" && exit 1
           fi
           # Check for Cross-Site Scripting (XSS) Protection
-          if ! grep -q "xss-clean" app.js; then
+          if ! grep -q "xss-clean" App.js; then
             echo "XSS protection missing (xss-clean middleware)" && exit 1
           fi
           # Check for Man-in-the-Middle Attack Protection
-          if ! grep -q "strict-transport-security" app.js; then
+          if ! grep -q "strict-transport-security" App.js; then
             echo "HSTS header missing (use Helmet to enforce Strict-Transport-Security)" && exit 1
           fi
           # DDoS Protection (Rate Limiting and Network Throttling)
-          if ! grep -q "express-rate-limit" app.js; then
+          if ! grep -q "express-rate-limit" App.js; then
             echo "DDoS protection missing (express-rate-limit middleware)" && exit 1
           fi
 
