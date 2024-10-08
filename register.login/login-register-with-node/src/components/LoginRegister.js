@@ -47,7 +47,9 @@ const LoginRegister = () => {
   }
 
      /*----------------------------- Login Function ----------------------------------*/
-    const handleLogin = async ()=>{
+    const handleLogin = async (event)=>{
+      event.preventDefault(); // Prevent the form from reloading the page
+
         const data = {
             userName:username,
             password:password,
@@ -250,12 +252,12 @@ const LoginRegister = () => {
               <div className="switch-panel switch-left">
                 <h1>Hello, Again</h1>
                 <p>We are happy to see you back</p>
-                <button type="submit" className='hidden btn border-white text-white w-50 fs-6' id="login" onClick={SwitchContent}>Login</button>
+                <button className='hidden btn border-white text-white w-50 fs-6' id="login" onClick={SwitchContent}>Login</button>
               </div>
               <div className="switch-panel switch-right">
                 <h1>Welcome</h1>
                 <p> Join us today to experience secure, seamless banking services tailored to your global needs.</p>
-                <button type="submit" className='hidden btn border-white text-white w-50 fs-6' id='register' onClick={SwitchContent}>Register</button>
+                <button className='hidden btn border-white text-white w-50 fs-6' id='register' onClick={SwitchContent}>Register</button>
               </div>
             </div>
           </div>
