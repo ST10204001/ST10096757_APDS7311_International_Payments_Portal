@@ -41,9 +41,9 @@ const Transaction=()=>{
         }
     }*/
 
-      if(!isLoggedIn) {
+      /*if(!isLoggedIn) {
         redirect ("/login");
-      }
+      }*/
 
     return(
         <div className="content justify-content-center align-items-center d-flex shadow-lg" id="content">
