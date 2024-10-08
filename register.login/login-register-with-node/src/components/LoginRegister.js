@@ -27,7 +27,7 @@ const LoginRegister = () => {
         }
      
     try {
-        const response = await axios.post('https://localhost:3001/api/register', data);
+        const response = await axios.post('https://localhost:3000/api/register', data);
 
         // Check if the response contains the success message
         if (response.data.message) {
@@ -47,7 +47,9 @@ const LoginRegister = () => {
   }
 
      /*----------------------------- Login Function ----------------------------------*/
-    const handleLogin = async ()=>{
+    const handleLogin = async (event)=>{
+      event.preventDefault(); // Prevent the form from reloading the page
+
         const data = {
             userName:username,
             password:password,
@@ -55,7 +57,7 @@ const LoginRegister = () => {
         } 
 
         try{
-            await axios.post('https://localhost:3001/api/login', data , {
+            await axios.post('https://localhost:3000/api/login', data , {
                 withCredentials: true,
         })
             .then((res)=>{
@@ -74,7 +76,7 @@ const LoginRegister = () => {
     }
 
      /*----------------------------- Switch Control ----------------------------------*/
-   function SwitchContent(){
+   function SwitchContent(e){
     const content = document.getElementById('content');
     const registerBtn = document.getElementById('register');
     const loginBtn = document.getElementById('login');
@@ -86,6 +88,22 @@ const LoginRegister = () => {
     loginBtn.addEventListener('click', ()=>{
         content.classList.add("active")
     })
+
+     // Check which button was clicked
+     if (e.target.id === 'login') {
+      content.classList.remove("active");
+      setUserName(''); // Reset username for login
+      setPassword(''); // Reset password for login
+      setAccountNumber(''); // Reset account number for login
+  } else if (e.target.id === 'register') {
+      content.classList.add("active");
+      setUserName(''); // Reset username for register
+      setPassword(''); // Reset password for register
+      setUserFirstName(''); // Reset first name for register
+      setUserLastName(''); // Reset last name for register
+      setIdNumber(''); // Reset ID number for register
+      setAccountNumber(''); // Reset account number for register
+  }
 
   }
 
@@ -250,12 +268,12 @@ const LoginRegister = () => {
               <div className="switch-panel switch-left">
                 <h1>Hello, Again</h1>
                 <p>We are happy to see you back</p>
-                <button type="submit" className='hidden btn border-white text-white w-50 fs-6' id="login" onClick={SwitchContent}>Login</button>
+                <button className='hidden btn border-white text-white w-50 fs-6' id="login" onClick={SwitchContent}>Login</button>
               </div>
               <div className="switch-panel switch-right">
                 <h1>Welcome</h1>
                 <p> Join us today to experience secure, seamless banking services tailored to your global needs.</p>
-                <button type="submit" className='hidden btn border-white text-white w-50 fs-6' id='register' onClick={SwitchContent}>Register</button>
+                <button className='hidden btn border-white text-white w-50 fs-6' id='register' onClick={SwitchContent}>Register</button>
               </div>
             </div>
           </div>
