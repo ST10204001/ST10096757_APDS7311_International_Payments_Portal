@@ -13,7 +13,7 @@ const LoginRegister = () => {
 
     let redirect = useNavigate();
 
-     {/*----------------------------- Register Function ----------------------------------*/}
+     /*----------------------------- Register Function ----------------------------------*/
     const handleRegister = async (event)=>{
         event.preventDefault(); // Prevent the default form submission behavior
 
@@ -46,7 +46,7 @@ const LoginRegister = () => {
     } 
   }
 
-     {/*----------------------------- Login Function ----------------------------------*/}
+     /*----------------------------- Login Function ----------------------------------*/
     const handleLogin = async ()=>{
         const data = {
             userName:username,
@@ -73,7 +73,7 @@ const LoginRegister = () => {
         }
     }
 
-     {/*----------------------------- Switch Control ----------------------------------*/}
+     /*----------------------------- Switch Control ----------------------------------*/
    function SwitchContent(){
     const content = document.getElementById('content');
     const registerBtn = document.getElementById('register');
@@ -89,7 +89,7 @@ const LoginRegister = () => {
 
   }
 
-     {/*----------------------------- Frontend Code ----------------------------------*/}
+     /*----------------------------- Frontend Code ----------------------------------*/
     return (
         <div className="content justify-content-center align-items-center d-flex shadow-lg" id="content">
           {/*----------------------------- Register Form ----------------------------------*/}
