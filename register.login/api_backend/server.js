@@ -7,7 +7,7 @@ import cors from 'cors'; // Import cors
 
 // Load SSL certificate and key
 const sslOptions = {
-    key: fs.readFileSync('./keys/server.KEY'),  // Path to your private key
+    key: fs.readFileSync('./keys/server.key'),  // Path to your private key
     cert: fs.readFileSync('./keys/server.crt'),    // Path to your certificate
 };
 
