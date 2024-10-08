@@ -113,3 +113,11 @@ code {
 .content.active .switch-right{
   transform: translateX(200%);
 } 
+
+.form-group {
+  margin-bottom: 15px; /* Adjust spacing as needed */
+}
+
+label {
+  margin-bottom: 5px; /* Space between label and input */
+}

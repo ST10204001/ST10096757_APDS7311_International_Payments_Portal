@@ -13,9 +13,10 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3001', // Specify the frontend URL
+    origin: 'https://localhost:3001', // Update to the HTTPS URL of your frontend
     credentials: true, // Enable sending cookies or HTTP credentials
 }));
+
 app.use(helmet({
     frameguard: { action: 'deny' } // Enable Clickjacking protection
 })); 
