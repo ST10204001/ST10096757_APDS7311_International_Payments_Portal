@@ -52,7 +52,7 @@ jobs:
         run: |
           cd register.login/api_backend
           ls -l ./keys  # List the contents of the keys directory
-          chmod 644 ./keys/server.KEY
+          chmod 644 ./keys/server.key
           chmod 644 ./keys/server.crt
 
       # Step 7: Build React App
