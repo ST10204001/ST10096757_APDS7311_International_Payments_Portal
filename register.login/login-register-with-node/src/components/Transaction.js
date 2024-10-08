@@ -46,7 +46,9 @@ const Transaction=()=>{
       }
 
     return(
-        <>
+        <div className="content justify-content-center align-items-center d-flex shadow-lg" id="content">
+        <div className="col-md-6 d-flex justify-cintent-center">
+        <form>
             <h1>Welcome {userName} </h1>
             <br />
             <h2>Transaction</h2>
@@ -61,7 +63,9 @@ const Transaction=()=>{
            <button type="submit">Pay</button>
            <br/> 
             <button onClick={handleLogout}>Logout</button>
-        </>
+        </form>
+        </div>
+        </div>
     )
 }
 
