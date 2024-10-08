@@ -7,11 +7,11 @@ const Transaction=()=>{
     //let redirect = useNavigate();
     //const [isLoggedIn, setIsLoggedIn] = useState(true);
     //const [userName, setUserName]=useState('');
-    useEffect(()=>{
+    //useEffect(()=>{
      //   checkAuthentication();
-    },
-    []
-    )
+    //},
+    //[]
+    //)
      /*const checkAuthentication= async()=>{
          try{
             await axios.get('http://localhost:3000/dashboard',{
