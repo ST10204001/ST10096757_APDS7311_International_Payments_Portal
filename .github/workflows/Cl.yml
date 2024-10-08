@@ -65,7 +65,7 @@ jobs:
       - name: Check SSL configuration
         run: |
           cd register.login/api_backend
-          if [ ! -f ./keys/private.key ] || [ ! -f ./keys/certificate.crt ]; then
+          if [ ! -f ./keys/server.key ] || [ ! -f ./keys/server.crt ]; then
             echo "SSL certificate or key missing" && exit 1
           fi
 
