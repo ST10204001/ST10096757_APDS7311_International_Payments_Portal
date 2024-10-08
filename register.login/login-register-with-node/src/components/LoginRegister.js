@@ -27,7 +27,7 @@ const LoginRegister = () => {
         }
      
     try {
-        const response = await axios.post('http://localhost:3000/api/register', data);
+        const response = await axios.post('https://localhost:3000/api/register', data);
 
         // Check if the response contains the success message
         if (response.data.message) {
@@ -57,7 +57,7 @@ const LoginRegister = () => {
         } 
 
         try{
-            await axios.post('http://localhost:3000/api/login', data , {
+            await axios.post('https://localhost:3000/api/login', data , {
                 withCredentials: true,
         })
             .then((res)=>{
@@ -76,7 +76,7 @@ const LoginRegister = () => {
     }
 
      /*----------------------------- Switch Control ----------------------------------*/
-   function SwitchContent(){
+   function SwitchContent(e){
     const content = document.getElementById('content');
     const registerBtn = document.getElementById('register');
     const loginBtn = document.getElementById('login');
@@ -88,6 +88,22 @@ const LoginRegister = () => {
     loginBtn.addEventListener('click', ()=>{
         content.classList.add("active")
     })
+
+     // Check which button was clicked
+     if (e.target.id === 'login') {
+      content.classList.remove("active");
+      setUserName(''); // Reset username for login
+      setPassword(''); // Reset password for login
+      setAccountNumber(''); // Reset account number for login
+  } else if (e.target.id === 'register') {
+      content.classList.add("active");
+      setUserName(''); // Reset username for register
+      setPassword(''); // Reset password for register
+      setUserFirstName(''); // Reset first name for register
+      setUserLastName(''); // Reset last name for register
+      setIdNumber(''); // Reset ID number for register
+      setAccountNumber(''); // Reset account number for register
+  }
 
   }
 
