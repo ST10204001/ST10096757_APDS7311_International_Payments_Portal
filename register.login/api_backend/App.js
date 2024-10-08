@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import helmet from 'helmet';
 import expressBrute from 'express-brute';
 import rateLimit from 'express-rate-limit';
