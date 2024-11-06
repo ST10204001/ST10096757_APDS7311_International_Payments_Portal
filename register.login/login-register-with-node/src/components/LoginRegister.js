@@ -4,19 +4,18 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const LoginRegister = () => {
-    const [username,setUserName]=useState('');
-    const [password,setPassword]=useState('');
-    const [userFirstName,setUserFirstName]=useState('');
-    const [userLastName,setUserLastName]=useState('');
-    const [idNumber,setIdNumber]=useState('');
-    const [accountNumber,setAccountNumber]=useState('');
+    const [username, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+    const [userFirstName, setUserFirstName] = useState('');
+    const [userLastName, setUserLastName] = useState('');
+    const [idNumber, setIdNumber] = useState('');
+    const [accountNumber, setAccountNumber] = useState('');
 
     let redirect = useNavigate();
 
-     /*----------------------------- Register Function ----------------------------------*/
-     const handleRegister = async (event) => {
+    /*----------------------------- Register Function ----------------------------------*/
+    const handleRegister = async (event) => {
       event.preventDefault(); // Prevent the default form submission behavior
-  
       const data = {
           username,
           userFirstName,
@@ -28,86 +27,79 @@ const LoginRegister = () => {
   
       try {
           const response = await axios.post('https://localhost:3001/api/register', data, {
-              withCredentials: true, // Include credentials in the request
+              withCredentials: true,
           });
   
-          // Check if the response contains the success message
           if (response.data.message) {
               alert(response.data.message); // Show success message
               redirect('/login');
           }
       } catch (error) {
-          console.log('Error details:', error); // Log the error to see the structure
+          console.log('Error details:', error);  // Log error for debugging
           if (error.response && error.response.data && error.response.data.error) {
-              // Show the specific error message from the backend
-              alert(error.response.data.error);
+              alert(error.response.data.error);  // Show specific error from backend
           } else {
-              // General error handling
               alert('An error occurred during registration.');
           }
       }
   };
 
-     /*----------------------------- Login Function ----------------------------------*/
-    const handleLogin = async (event)=>{
-      event.preventDefault(); // Prevent the form from reloading the page
+    /*----------------------------- Login Function ----------------------------------*/
+    const handleLogin = async (event) => {
+        event.preventDefault(); // Prevent the form from reloading the page
 
         const data = {
-            userName:username,
-            password:password,
+            userName: username,
+            password: password,
             accountNumber: accountNumber
-        } 
+        };
 
-        try{
-            await axios.post('https://localhost:3001/api/login', data , {
+        try {
+            const response = await axios.post('https://localhost:3001/api/login', data, {
                 withCredentials: true,
-        })
-            .then((res)=>{
-              if(res.status===200){
-                  redirect('/home');
-              }
-              else{
-                alert('Sorry Invalid Login😭😭');
-              }
-            })
+            });
 
-        }
-        catch(error){
+            if (response.status === 200) {
+                redirect('/home'); // Redirect to home after successful login
+            } else {
+                alert('Sorry Invalid Login😭😭');
+            }
+        } catch (error) {
             alert('Sorry Invalid Login😭😭');
         }
+    };
+
+    /*----------------------------- Switch Control ----------------------------------*/
+    function SwitchContent(e) {
+        const content = document.getElementById('content');
+        const registerBtn = document.getElementById('register');
+        const loginBtn = document.getElementById('login');
+
+        registerBtn.addEventListener('click', () => {
+            content.classList.add("active");
+        });
+
+        loginBtn.addEventListener('click', () => {
+            content.classList.add("active");
+        });
+
+        // Check which button was clicked
+        if (e.target.id === 'login') {
+            content.classList.remove("active");
+            setUserName(''); // Reset username for login
+            setPassword(''); // Reset password for login
+            setAccountNumber(''); // Reset account number for login
+        } else if (e.target.id === 'register') {
+            content.classList.add("active");
+            setUserName(''); // Reset username for register
+            setPassword(''); // Reset password for register
+            setUserFirstName(''); // Reset first name for register
+            setUserLastName(''); // Reset last name for register
+            setIdNumber(''); // Reset ID number for register
+            setAccountNumber(''); // Reset account number for register
+        }
     }
-
-     /*----------------------------- Switch Control ----------------------------------*/
-   function SwitchContent(e){
-    const content = document.getElementById('content');
-    const registerBtn = document.getElementById('register');
-    const loginBtn = document.getElementById('login');
-
-    registerBtn.addEventListener('click', ()=>{
-        content.classList.add("active")
-    })
-
-    loginBtn.addEventListener('click', ()=>{
-        content.classList.add("active")
-    })
-
-     // Check which button was clicked
-     if (e.target.id === 'login') {
-      content.classList.remove("active");
-      setUserName(''); // Reset username for login
-      setPassword(''); // Reset password for login
-      setAccountNumber(''); // Reset account number for login
-  } else if (e.target.id === 'register') {
-      content.classList.add("active");
-      setUserName(''); // Reset username for register
-      setPassword(''); // Reset password for register
-      setUserFirstName(''); // Reset first name for register
-      setUserLastName(''); // Reset last name for register
-      setIdNumber(''); // Reset ID number for register
-      setAccountNumber(''); // Reset account number for register
-  }
-
-  }
+  
 
      /*----------------------------- Frontend Code ----------------------------------*/
     return (
