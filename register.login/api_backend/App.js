@@ -13,9 +13,10 @@ const app = express();
 
 // Middleware for CORS
 app.use(cors({
-    origin: 'https://localhost:3001',  // Ensure this matches the frontend URL
-    credentials: true,  // Allow credentials (cookies)
+    origin: 'https://localhost:3002',  // Frontend URL - allow your frontend to communicate with the backend
+    credentials: true, // Allow credentials such as cookies to be sent
 }));
+
 
 app.use(helmet({
     frameguard: { action: 'deny' }, // Clickjacking protection
@@ -52,7 +53,7 @@ const bruteforce = new expressBrute(memoryStore, {
 });
 
 // MongoDB Connection
-mongoose.connect('mongodb+srv://monajackson98:Kc9gZY2EAkj5mIs9@cluster0.uxhruuc.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb+srv://monajackson98:Kc9gZY2EAkj5mIs9@cluster0.uxhruuc.mongodb.net/test', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log('Database connected successfully');
     })
@@ -70,7 +71,7 @@ const userSchema = new mongoose.Schema({
     accountNumber: String
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('users', userSchema);
 
 // Helper function to validate input
 function validateInput({ username, password, userFirstName, userLastName, idNumber, accountNumber }) {
@@ -102,42 +103,56 @@ function validateInput({ username, password, userFirstName, userLastName, idNumb
     return null;  // All inputs are valid
 }
 
+
+
 // Register Route
 app.post('/api/register', bruteforce.prevent, async (req, res) => {
+    console.log('Received request for registration:', req.body);
     const { username, password, userFirstName, userLastName, idNumber, accountNumber } = req.body;
 
-    const validationError = validateInput({ username, password, userFirstName, userLastName, idNumber, accountNumber });
-    if (validationError) {
-        return res.status(400).json({ error: validationError });
-    }
+    // Add your validation, user check, and registration logic
+    try {
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Username already exists' });
+        }
 
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-        return res.status(400).json({ error: 'Username already exists' });
-    }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({
+            username,
+            userFirstName,
+            userLastName,
+            password: hashedPassword,
+            idNumber,
+            accountNumber,
+        });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ 
-        username, 
-        userFirstName, 
-        userLastName, 
-        password: hashedPassword, 
-        idNumber, 
-        accountNumber 
-    });
-    await newUser.save();
-    res.status(201).json({ message: 'User registered successfully' });
+        await newUser.save();
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+        console.error('Error registering user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
-
 // Login Route
 app.post('/api/login', bruteforce.prevent, async (req, res) => {
     const { username, password } = req.body;
-    const user = await User.findOne({ username });
 
+    // Check if user exists and compare passwords
+    const user = await User.findOne({ username });
     if (user && (await bcrypt.compare(password, user.password))) {
-        res.cookie('userToken', user._id.toString(), { httpOnly: true });
+        
+        // Set the cookie with user._id after successful login
+        res.cookie('userToken', user._id.toString(), {
+            httpOnly: true, // Prevents access to cookie from JavaScript
+            secure: process.env.NODE_ENV === 'production', // Only secure in production
+            sameSite: 'Strict', // Helps prevent CSRF attacks
+        });
+
+        // Respond with a success message
         res.status(200).send('Login successful');
     } else {
+        // If credentials are invalid, respond with an error
         res.status(401).send('Invalid credentials');
     }
 });
