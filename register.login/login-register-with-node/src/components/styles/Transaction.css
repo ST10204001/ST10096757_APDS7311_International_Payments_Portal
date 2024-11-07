@@ -1,0 +1,36 @@
+/* src/styles/Transaction.css */
+.transaction-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .transaction-content {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 5px;
+  }
+  

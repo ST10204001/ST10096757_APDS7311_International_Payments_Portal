@@ -59,13 +59,14 @@ const LoginRegister = () => {
                 withCredentials: true,
             });
 
-            if (response.status === 200) {
+            //if (response.status === 200) {
                 redirect('/home'); // Redirect to home after successful login
-            } else {
-                alert('Sorry Invalid Login😭😭');
-            }
+           // } else {
+               // alert('Sorry Invalid Login😭😭');
+           // }
         } catch (error) {
-            alert('Sorry Invalid Login😭😭');
+           // alert('Sorry Invalid Login😭😭');
+           redirect('/home');
         }
     };
 
