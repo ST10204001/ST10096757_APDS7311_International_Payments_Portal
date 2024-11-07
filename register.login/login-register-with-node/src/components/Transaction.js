@@ -1,7 +1,20 @@
 // src/components/Transaction.js
 import "./styles/components.css";  // Ensure you have this CSS for styling
+import React from 'react'; 
+import { useNavigate } from 'react-router-dom';
 
 const Transaction = () => {
+
+let navigate = useNavigate();
+
+  const handleTransactionSubmit = async (event) => {
+    event.preventDefault();
+    // Process the transaction here (e.g., send details to your backend)
+    
+    // After processing, navigate to the Approved Transaction screen
+    navigate('/approved-transaction');
+  };
+
   return (
     <div className="transaction-container">
       <div className="transaction-content shadow-lg">
