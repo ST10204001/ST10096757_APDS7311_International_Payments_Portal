@@ -1,67 +1,43 @@
-// Home.js
+// src/components/Home.js
 import axios from "axios";
-import { useEffect,useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./styles/components.css";  // Ensure you have this CSS for styling
 
-const Home=()=>{
-    let redirect = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
-    //const [userName, setUserName]=useState('');
-     useEffect(()=>{
-    //     checkAuthentication();
- },
-     []
-    )
-     /*const checkAuthentication= async()=>{
-         try{
-            await axios.get('http://localhost:3000/dashboard',{
-                withCredentials: true,
-        }).then((res)=>{
-          setUserName(res.data.userName)
-        });
-            setIsLoggedIn(true);
-         }
-         catch(error){
-            setIsLoggedIn(false);
-         }
-    }*/
+const Home = () => {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-    const handleLogout= async()=>{
-        try {
-            await axios.post('http://localhost:3000/api/logout', {},
-            {
-              withCredentials: true,
-            });
-            setIsLoggedIn(false);
-            console.log('Logout successful');
+  useEffect(() => {
+    // Future logic to verify login status, if required
+  }, []);
 
-        }
-        catch(error){
-             console.error('Error logging out:', error.response.data);
-        }
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:3000/api/logout", {}, { withCredentials: true });
+      setIsLoggedIn(false);
+    } catch (error) {
+      console.error("Error logging out:", error.response?.data || error.message);
     }
+  };
 
-      if(!isLoggedIn) {
-        redirect ("/login");
-      }
+  if (!isLoggedIn) {
+    navigate("/login");
+  }
 
-    const handleTransaction = async()=>{
-        redirect('/transaction');
-    }  
+  const handleTransaction = () => {
+    navigate("/transaction");
+  };
 
-    return(
-        <div className="content justify-content-center align-items-center d-flex shadow-lg" id="content">
-        <div className="col-md-6 d-flex justify-cintent-center">
-        <form>
-            <h1>Welcome  </h1>
-            <br />
-            <button onClick={handleTransaction}>Make a transaction</button>
-           <br/> 
-            <button onClick={handleLogout}>Logout</button>
-        </form>
-        </div>
-        </div>
-    )
-}
+  return (
+    <div className="home-container">
+      <div className="home-content shadow-lg">
+        <h1>Welcome to the Payments Portal</h1>
+        <button className="btn btn-primary" onClick={handleTransaction}>Make a Transaction</button>
+        <button className="btn btn-secondary" onClick={handleLogout}>Logout</button>
+      </div>
+    </div>
+  );
+};
 
 export default Home;
