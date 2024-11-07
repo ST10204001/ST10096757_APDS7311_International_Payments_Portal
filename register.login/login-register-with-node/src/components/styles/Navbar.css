@@ -1,0 +1,18 @@
+/* src/styles/Navbar.css */
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    background-color: #007bff;
+    padding: 10rem;
+  }
+  
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .nav-link:hover {
+    text-decoration: underline;
+  }
+  
