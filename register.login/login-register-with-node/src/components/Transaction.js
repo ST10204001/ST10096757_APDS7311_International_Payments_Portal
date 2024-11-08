@@ -1,9 +1,12 @@
 // src/components/Transaction.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import './styles/Transaction.css'; 
+import Navbar from './Navbar';
+import './styles/Transaction.css';
 
 const Transaction = () => {
+  const [userToSendTo, setUserToSendTo] = useState('');
+  const [userAccount, setUserAccount] = useState('');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('');
   const [provider, setProvider] = useState('');
@@ -12,6 +15,8 @@ const Transaction = () => {
     e.preventDefault();
 
     const transactionData = {
+      userToSendTo,
+      userAccount,
       amount,
       currency,
       provider,
@@ -23,6 +28,8 @@ const Transaction = () => {
       });
       if (response.status === 200) {
         alert('Transaction successful!');
+        setUserToSendTo('');
+        setUserAccount('');
         setAmount('');
         setCurrency('');
         setProvider('');
@@ -35,9 +42,36 @@ const Transaction = () => {
 
   return (
     <div className="transaction-container">
+      <Navbar/>
       <div className="transaction-content shadow-lg">
         <h1>New Transaction</h1>
         <form onSubmit={handleSubmit}>
+          <div className="form-row">
+            <div className="form-group">
+              <label>User to Send To:</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Recipient username"
+                value={userToSendTo}
+                onChange={(e) => setUserToSendTo(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Current User Account:</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Your account confirmation"
+                value={userAccount}
+                onChange={(e) => setUserAccount(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
           <div className="form-group">
             <label>Amount:</label>
             <input
