@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';  // Axios for HTTP requests
+import { useNavigate } from 'react-router-dom';  // Import useNavigate
+
 
 const LoginRegister = () => {
     const [username, setUserName] = useState('');
@@ -11,6 +12,8 @@ const LoginRegister = () => {
     const [error, setError] = useState(null);  // To store error messages
     const [successMessage, setSuccessMessage] = useState(null);  // To store success messages
     const [isLogin, setIsLogin] = useState(true); // For toggling between login/register forms
+
+    const navigate = useNavigate(); 
 
     // Error message display
     const ErrorMessage = () => {
@@ -59,6 +62,13 @@ const LoginRegister = () => {
             console.log('Registration success:', responseData);
             setSuccessMessage(responseData.message);
             setError(null);
+
+                // Navigate to the login form after successful registration
+                setTimeout(() => {
+                    setIsLogin(true);
+                    navigate('/');
+                }, 2000); // Optional delay for displaying success message
+
         } catch (err) {
             console.error('Registration error:', err);
             setError(err.message || 'Something went wrong');
@@ -73,6 +83,7 @@ const LoginRegister = () => {
         const loginData = {
             username,
             password,
+            accountNumber,
         };
 
         try {
@@ -82,7 +93,7 @@ const LoginRegister = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(userData),
+                body: JSON.stringify(loginData),
                 credentials: 'include', // Allow cookies to be sent
             });
 
@@ -93,6 +104,9 @@ const LoginRegister = () => {
             console.log('Login success:', response.data);
             setSuccessMessage('Login successful');
             setError(null);
+
+            // Redirect to the home page after successful login
+            navigate('/home');
         } catch (err) {
             console.error('Login error:', err);
             setError(err.response ? err.response.data.error : 'Something went wrong');
@@ -110,7 +124,7 @@ const LoginRegister = () => {
     return (
         <div className="container mt-5">
             <div className="row justify-content-center align-items-center">
-                <div className="col-md-6 shadow-lg p-4">
+                <div className="shadow-lg p-4" style={{ maxWidth: '600px', width: '100%' }}>
                     <h2 className="text-center">{isLogin ? 'Login' : 'Register'}</h2>
 
                     {/* Display Success/Failure messages */}
@@ -141,6 +155,18 @@ const LoginRegister = () => {
                                 required
                             />
                         </div>
+
+                        {/* Account Number */}
+                        <div className="form-group mb-3">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Account Number"
+                                        value={accountNumber}
+                                        onChange={(e) => setAccountNumber(e.target.value)}
+                                        required
+                                    />
+                                </div>
 
                         {/* Additional fields for registration only */}
                         {!isLogin && (
@@ -174,17 +200,6 @@ const LoginRegister = () => {
                                         placeholder="ID Number"
                                         value={idNumber}
                                         onChange={(e) => setIdNumber(e.target.value)}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group mb-3">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Account Number"
-                                        value={accountNumber}
-                                        onChange={(e) => setAccountNumber(e.target.value)}
                                         required
                                     />
                                 </div>
