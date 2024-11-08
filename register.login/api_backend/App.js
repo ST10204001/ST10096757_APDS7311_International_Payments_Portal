@@ -105,5 +105,33 @@ app.post('/api/register', bruteforce.prevent, async (req, res) => {
     }
 });
 
+// Login Route
+app.post('/api/login', bruteforce.prevent, async (req, res) => {
+    const { username, password } = req.body;
+
+    // Check if user exists and compare passwords
+    const user = await User.findOne({ username });
+    if (user && (await bcrypt.compare(password, user.password))) {
+        
+        // Set the cookie with user._id after successful login
+        res.cookie('userToken', user._id.toString(), {
+            httpOnly: true, // Prevents access to cookie from JavaScript
+            secure: process.env.NODE_ENV === 'production', // Only secure in production
+            sameSite: 'Strict', // Helps prevent CSRF attacks
+        });
+
+        // Respond with a success message
+        res.status(200).send('Login successful');
+    } else {
+        // If credentials are invalid, respond with an error
+        res.status(401).send('Invalid credentials');
+    }
+});
+
+// Health Check Route
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'UP' });
+});
+
 // Export the app
 export default app;
