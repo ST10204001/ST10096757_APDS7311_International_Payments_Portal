@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from 'axios';  // Axios for HTTP requests
 
 const LoginRegister = () => {
     const [username, setUserName] = useState('');
@@ -9,11 +9,28 @@ const LoginRegister = () => {
     const [idNumber, setIdNumber] = useState('');
     const [accountNumber, setAccountNumber] = useState('');
     const [error, setError] = useState(null);  // To store error messages
+    const [successMessage, setSuccessMessage] = useState(null);  // To store success messages
+    const [isLogin, setIsLogin] = useState(true); // For toggling between login/register forms
+
+    // Error message display
+    const ErrorMessage = () => {
+        if (error) {
+            return <div className="alert alert-danger">{error}</div>;
+        }
+        return null;
+    };
+
+    const SuccessMessage = () => {
+        if (successMessage) {
+            return <div className="alert alert-success">{successMessage}</div>;
+        }
+        return null;
+    };
 
     // Registration handler
     const handleRegister = async (e) => {
         e.preventDefault();
-        
+    
         const userData = {
             username,
             password,
@@ -24,238 +41,167 @@ const LoginRegister = () => {
         };
 
         try {
-            const response = await axios.post('https://localhost:3002/api/register', userData, {
-                withCredentials: true,  // Allow sending cookies with requests
-
+            // Send the registration data to the backend API
+            const response = await fetch('/api/register', {  // Use the relative path
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+                credentials: 'include', // Allow cookies to be sent
             });
-            console.log('Registration success:', response.data);
-            // Handle successful registration, maybe redirect user or show a success message
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const responseData = await response.json(); // Parse JSON response
+            console.log('Registration success:', responseData);
+            setSuccessMessage(responseData.message);
+            setError(null);
         } catch (err) {
             console.error('Registration error:', err);
-            setError(err.response ? err.response.data.error : 'Something went wrong');
+            setError(err.message || 'Something went wrong');
+            setSuccessMessage(null);
         }
     };
 
-    // Login handler
+    // Login handler with Axios
     const handleLogin = async (e) => {
         e.preventDefault();
 
         const loginData = {
             username,
             password,
-            accountNumber,
         };
 
         try {
-            const response = await axios.post('https://localhost:3002/api/login', loginData, {
-                withCredentials: true,  // Allow sending cookies with requests
+            // Send the registration data to the backend API
+            const response = await fetch('/api/login', {  // Use the relative path
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+                credentials: 'include', // Allow cookies to be sent
             });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             console.log('Login success:', response.data);
-            // Handle successful login, maybe redirect or show a success message
+            setSuccessMessage('Login successful');
+            setError(null);
         } catch (err) {
             console.error('Login error:', err);
             setError(err.response ? err.response.data.error : 'Something went wrong');
+            setSuccessMessage(null);
         }
     };
 
-    // Error message display
-    const ErrorMessage = () => {
-        if (error) {
-            return <div className="alert alert-danger">{error}</div>;
-        }
-        return null;
-    };
-
-    // Switch between Register and Login forms (with DOM manipulation)
-    const SwitchContent = (e) => {
-        const content = document.getElementById('content');
-        const registerBtn = document.getElementById('register');
-        const loginBtn = document.getElementById('login');
-
-        // Simplified toggling logic for switching between login/register
-        if (e.target.id === 'login') {
-            content.classList.remove("active");
-        } else if (e.target.id === 'register') {
-            content.classList.add("active");
-        }
+    // Toggle between Login and Register Forms
+    const toggleForm = () => {
+        setIsLogin(!isLogin);
+        setError(null);
+        setSuccessMessage(null);
     };
 
     return (
-        <div className="content justify-content-center align-items-center d-flex shadow-lg" id="content">
-            {/* Registration Form */}
-            <div className="col-md-6 d-flex justify-content-center">
-                <form onSubmit={handleRegister}>
-                    <div className="header-text mb-4">
-                        <h1>Register for Online Banking</h1>
-                    </div>
+        <div className="container mt-5">
+            <div className="row justify-content-center align-items-center">
+                <div className="col-md-6 shadow-lg p-4">
+                    <h2 className="text-center">{isLogin ? 'Login' : 'Register'}</h2>
 
-                    <div className="input-group mb-3">
-                        <input
-                            className="form-control form-control-lg bg-light fs-6"
-                            type="text"
-                            name="username"
-                            placeholder="Username"
-                            value={username}
-                            onChange={(e) => setUserName(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="input-group mb-3">
-                        <input
-                            className="form-control form-control-lg bg-light fs-6"
-                            type="text"
-                            name="userFirstName"
-                            placeholder="First Name"
-                            value={userFirstName}
-                            onChange={(e) => setUserFirstName(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="input-group mb-3">
-                        <input
-                            className="form-control form-control-lg bg-light fs-6"
-                            type="text"
-                            name="userLastName"
-                            placeholder="Last Name"
-                            value={userLastName}
-                            onChange={(e) => setUserLastName(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="input-group mb-3">
-                        <input
-                            className="form-control form-control-lg bg-light fs-6"
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="input-group mb-3">
-                        <input
-                            className="form-control form-control-lg bg-light fs-6"
-                            type="text"
-                            name="idNumber"
-                            placeholder="ID Number"
-                            value={idNumber}
-                            onChange={(e) => setIdNumber(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="input-group mb-3">
-                        <input
-                            className="form-control form-control-lg bg-light fs-6"
-                            type="text"
-                            name="accountNumber"
-                            placeholder="Account Number"
-                            value={accountNumber}
-                            onChange={(e) => setAccountNumber(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    {/* Error message */}
+                    {/* Display Success/Failure messages */}
+                    <SuccessMessage />
                     <ErrorMessage />
 
-                    <div className="input-group mb-5 d-flex justify-content-center">
-                        <div className="form-check">
+                    <form onSubmit={isLogin ? handleLogin : handleRegister}>
+                        {/* Username */}
+                        <div className="form-group mb-3">
                             <input
-                                type="checkbox"
-                                name="terms"
-                                value="checked"
-                                className="form-check-input"
+                                type="text"
+                                className="form-control"
+                                placeholder="Username"
+                                value={username}
+                                onChange={(e) => setUserName(e.target.value)}
                                 required
                             />
-                            <label htmlFor="formcheck" className="form-check-label text-secondary">
-                                <small> I agree to the Terms and Service that my data will be taken and sold. </small>
-                            </label>
                         </div>
-                    </div>
 
-                    <div className="input-group mb-3 justify-content-center">
-                        <button className="btn border-whote text-white w-50 fs-6" type="submit">
-                            Register
-                        </button>
-                    </div>
-                </form>
-            </div>
+                        {/* Password */}
+                        <div className="form-group mb-3">
+                            <input
+                                type="password"
+                                className="form-control"
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </div>
 
-            {/* Login Form */}
-            <div className="col-md-6 right-box">
-                <form onSubmit={handleLogin}>
-                    <div className="header-text mb-4">
-                        <h1>Login</h1>
-                    </div>
+                        {/* Additional fields for registration only */}
+                        {!isLogin && (
+                            <>
+                                <div className="form-group mb-3">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="First Name"
+                                        value={userFirstName}
+                                        onChange={(e) => setUserFirstName(e.target.value)}
+                                        required
+                                    />
+                                </div>
 
-                    <div className="input-group mb-3">
-                        <input
-                            type="text"
-                            name="username"
-                            placeholder="Username"
-                            value={username}
-                            onChange={(e) => setUserName(e.target.value)}
-                            required
-                        />
-                    </div>
+                                <div className="form-group mb-3">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Last Name"
+                                        value={userLastName}
+                                        onChange={(e) => setUserLastName(e.target.value)}
+                                        required
+                                    />
+                                </div>
 
-                    <div className="input-group mb-3">
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
+                                <div className="form-group mb-3">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="ID Number"
+                                        value={idNumber}
+                                        onChange={(e) => setIdNumber(e.target.value)}
+                                        required
+                                    />
+                                </div>
 
-                    <div className="input-group mb-3">
-                        <input
-                            type="text"
-                            name="accountNumber"
-                            placeholder="Account number"
-                            value={accountNumber}
-                            onChange={(e) => setAccountNumber(e.target.value)}
-                            required
-                        />
-                    </div>
+                                <div className="form-group mb-3">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Account Number"
+                                        value={accountNumber}
+                                        onChange={(e) => setAccountNumber(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                            </>
+                        )}
 
-                    {/* Error message */}
-                    <ErrorMessage />
+                        <div className="form-group text-center">
+                            <button className="btn btn-primary w-100" type="submit">
+                                {isLogin ? 'Login' : 'Register'}
+                            </button>
+                        </div>
+                    </form>
 
-                    <div className="input-group mb-3 justify-content-center">
-                        <button className="btn border-whote text-white w-50 fs-6" type="submit">
-                            Login
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            {/* Switch Panel */}
-            <div className="switch-content">
-                <div className="switch">
-                    <div className="switch-panel switch-left">
-                        <h1>Hello, Again</h1>
-                        <p>We are happy to see you back</p>
-                        <button
-                            className="hidden btn border-white text-white w-50 fs-6"
-                            id="login"
-                            onClick={SwitchContent}
-                        >
-                            Login
-                        </button>
-                    </div>
-                    <div className="switch-panel switch-right">
-                        <h1>Welcome</h1>
-                        <p>Join us today to experience secure, seamless banking services tailored to your global needs.</p>
-                        <button
-                            className="hidden btn border-white text-white w-50 fs-6"
-                            id="register"
-                            onClick={SwitchContent}
-                        >
-                            Register
+                    {/* Switch between Login and Register */}
+                    <div className="text-center mt-3">
+                        <button className="btn btn-link" onClick={toggleForm}>
+                            {isLogin ? 'Don\'t have an account? Register' : 'Already have an account? Login'}
                         </button>
                     </div>
                 </div>

@@ -2,12 +2,12 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
     app.use(
-        '/api',
+        '/api',  // API path prefix
         createProxyMiddleware({
-            target: 'https://localhost:3002',
-            changeOrigin: true,
+            target: 'https://localhost:5000',  // Backend server running on port 5000
+            changeOrigin: true,  // Adjust the origin header for the request
             secure: false,  // Allow self-signed certs for local development
-            logLevel: 'debug', // For more verbose logs
+            logLevel: 'debug',  // Enable verbose logging
         })
     );
 };
