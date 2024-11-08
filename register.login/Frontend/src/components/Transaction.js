@@ -4,12 +4,22 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Transaction = () => {
-
 let navigate = useNavigate();
+const [amount, setAmount] = useState('');
+    const [currency, setCurrency] = useState('');
+    const [paymentProvider, setPaymentProvider] = useState('');
 
   const handleTransactionSubmit = async (event) => {
     event.preventDefault();
     // Process the transaction here (e.g., send details to your backend)
+    // this is for the approved transaction, to show transaction details
+    const transactionDetails = {
+                amount,
+                currency,
+                paymentProvider,
+                transactionId: 'TXN1234567890', // Ideally, this would be generated dynamically
+                date: new Date().toLocaleDateString(),
+    };
     
     // After processing, navigate to the Approved Transaction screen
     navigate('/approved-transaction');
