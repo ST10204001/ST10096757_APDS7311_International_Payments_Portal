@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
 
-
 const LoginRegister = () => {
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -9,6 +8,7 @@ const LoginRegister = () => {
     const [userLastName, setUserLastName] = useState('');
     const [idNumber, setIdNumber] = useState('');
     const [accountNumber, setAccountNumber] = useState('');
+    const [isEmployee, setIsEmployee] = useState(false); // State for employee toggle
     const [error, setError] = useState(null);  // To store error messages
     const [successMessage, setSuccessMessage] = useState(null);  // To store success messages
     const [isLogin, setIsLogin] = useState(true); // For toggling between login/register forms
@@ -34,6 +34,12 @@ const LoginRegister = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
     
+        if (isEmployee) {
+            // If employee, prevent registration and show a message
+            setError('Employees cannot register through this form. Please contact an admin.');
+            return;
+        }
+
         const userData = {
             username,
             password,
@@ -76,19 +82,18 @@ const LoginRegister = () => {
         }
     };
 
-    // Login handler with Axios
+    // Login handler
     const handleLogin = async (e) => {
         e.preventDefault();
 
         const loginData = {
             username,
             password,
-            accountNumber,
+            isEmployee,  // Pass the employee status
         };
 
         try {
-            // Send the registration data to the backend API
-            const response = await fetch('/api/login', {  // Use the relative path
+            const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -101,7 +106,8 @@ const LoginRegister = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            console.log('Login success:', response.data);
+            const responseData = await response.json(); // Parse JSON response
+            console.log('Login success:', responseData);
             setSuccessMessage('Login successful');
             setError(null);
 
@@ -109,7 +115,7 @@ const LoginRegister = () => {
             navigate('/home');
         } catch (err) {
             console.error('Login error:', err);
-            setError(err.response ? err.response.data.error : 'Something went wrong');
+            setError(err.message || 'Something went wrong');
             setSuccessMessage(null);
         }
     };
@@ -156,20 +162,50 @@ const LoginRegister = () => {
                             />
                         </div>
 
-                        {/* Account Number */}
-                        <div className="form-group mb-3">
+                        {/* Account Number (Only for regular users) */}
+                        {!isEmployee && (
+                            <div className="form-group mb-3">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Account Number"
+                                    value={accountNumber}
+                                    onChange={(e) => setAccountNumber(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        )}
+
+                        {/* Employee Login Option (Only on Login Form) */}
+                        {isLogin && (
+                            <div className="form-group mb-3">
+                                <label>Login as: </label>
+                                <div>
                                     <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Account Number"
-                                        value={accountNumber}
-                                        onChange={(e) => setAccountNumber(e.target.value)}
-                                        required
+                                        type="radio"
+                                        id="user"
+                                        name="userType"
+                                        value="user"
+                                        checked={!isEmployee}
+                                        onChange={() => setIsEmployee(false)}
                                     />
+                                    <label htmlFor="user">Regular User</label>
+
+                                    <input
+                                        type="radio"
+                                        id="employee"
+                                        name="userType"
+                                        value="employee"
+                                        checked={isEmployee}
+                                        onChange={() => setIsEmployee(true)}
+                                    />
+                                    <label htmlFor="employee">Employee</label>
                                 </div>
+                            </div>
+                        )}
 
                         {/* Additional fields for registration only */}
-                        {!isLogin && (
+                        {!isLogin && !isEmployee && (
                             <>
                                 <div className="form-group mb-3">
                                     <input
@@ -204,6 +240,13 @@ const LoginRegister = () => {
                                     />
                                 </div>
                             </>
+                        )}
+
+                        {/* Message for employees on the register page */}
+                        {!isLogin && isEmployee && (
+                            <div className="alert alert-info">
+                                Employees cannot register through this form. Please contact an admin.
+                            </div>
                         )}
 
                         <div className="form-group text-center">
