@@ -1,8 +1,8 @@
 import cors from 'cors';
 
 const corsOptions = {
-    origin: 'https://localhost:5001', // Frontend URL
-    credentials: true, // Allow cookies to be sent
+    origin: 'https://localhost:5001',  // Frontend URL (adjust as needed)
+    credentials: true,  // Allow cookies to be sent
 };
 
 const setupCors = (app) => {

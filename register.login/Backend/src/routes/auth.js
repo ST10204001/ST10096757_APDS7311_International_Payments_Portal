@@ -62,18 +62,40 @@ router.post('/login', [
         // Check if the user is an employee
         if (user.isEmployee) {
             // Employee login does not require account number
-            if (await bcrypt.compare(password, user.password)) {
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (isPasswordValid) {
+                // Set session data for employee login
+                req.session.user = {
+                    id: user._id,
+                    username: user.username,
+                    firstName: user.userFirstName,
+                    lastName: user.userLastName,
+                    isEmployee: user.isEmployee,
+                };
+
                 // Respond with success for employee login
                 return res.status(200).json({ message: 'Employee login successful' });
             } else {
                 return res.status(400).json({ error: 'Invalid password' });
             }
         } else {
-            // Normal user login requires account number
+            // Regular user login requires account number verification
             if (user.accountNumber !== accountNumber) {
                 return res.status(400).json({ error: 'Invalid account number' });
             }
-            if (await bcrypt.compare(password, user.password)) {
+
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (isPasswordValid) {
+                // Set session data for regular user login
+                req.session.user = {
+                    id: user._id,
+                    username: user.username,
+                    firstName: user.userFirstName,
+                    lastName: user.userLastName,
+                    isEmployee: user.isEmployee,
+                    accountNumber: user.accountNumber,  // Store account number for regular users
+                };
+
                 // Respond with success for regular user login
                 return res.status(200).json({ message: 'User login successful' });
             } else {
@@ -82,7 +104,7 @@ router.post('/login', [
         }
     } catch (error) {
         console.error('Login error:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ error: 'Internal server error' });
     }
 });
 

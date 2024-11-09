@@ -20,24 +20,42 @@ const Transaction = () => {
       amount,
       currency,
       provider,
-    };
-
-    try {
-      const response = await axios.post('https://localhost:3001/api/transaction', transactionData, {
-        withCredentials: true,
-      });
-      if (response.status === 200) {
-        alert('Transaction successful!');
-        setUserToSendTo('');
-        setUserAccount('');
-        setAmount('');
-        setCurrency('');
-        setProvider('');
+  };
+  
+  try {
+    const response = await fetch('/api/transaction', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(transactionData),
+      credentials: 'include',
+  });
+  
+      // Check if response is JSON
+      const contentType = response.headers.get('Content-Type');
+      if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          if (response.ok) {
+              alert('Transaction successful!');
+              setUserToSendTo('');
+              setUserAccount('');
+              setAmount('');
+              setCurrency('');
+              setProvider('');
+          } else {
+              alert(`Transaction failed: ${data.error || 'Please try again.'}`);
+          }
+      } else {
+          // Handle non-JSON response
+          const text = await response.text();
+          console.error('Received non-JSON response:', text);
+          alert('Transaction failed due to server error. Please try again.');
       }
-    } catch (error) {
+  } catch (error) {
       alert('Transaction failed. Please try again.');
       console.error('Transaction error:', error);
-    }
+  }
   };
 
   return (

@@ -6,6 +6,7 @@ import setupSession from './config/session.js';
 import setupXSSProtection from './middleware/xssProtection.js';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
+import transRoutes from './routes/transaction.js';
 import logger from './utils/logger.js';
 import setupHSTS from './config/hsts.js';  // Import the HSTS setup
 
@@ -34,6 +35,7 @@ setupHSTS(app);
 
 // Register routes
 app.use('/api', authRoutes);
+app.use('/api', transRoutes);
 
 // Health Check Route
 app.get('/health', (req, res) => {

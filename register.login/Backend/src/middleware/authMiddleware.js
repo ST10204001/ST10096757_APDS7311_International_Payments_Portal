@@ -1,25 +1,15 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/user.js';
+// src/middleware/authMiddleware.js
+//import jwt from 'jsonwebtoken'; // Remove if not used
+//import User from '../models/user.js';
 
-const authMiddleware = async (req, res, next) => {
-  try {
-    const token = req.cookies.userToken;
-    if (!token) {
-      return res.status(401).json({ error: 'No token provided, please log in.' });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // JWT_SECRET is your secret key used to sign the token
-    const user = await User.findById(decoded.id); // Get the user by ID
-    if (!user) {
-      return res.status(401).json({ error: 'User not found' });
-    }
-
-    req.user = user; // Add the user to the request object
-    next();
-  } catch (error) {
-    console.error('Authentication error:', error);
-    res.status(401).json({ error: 'Unauthorized' });
+const authMiddleware = (req, res, next) => {
+  // Check if the user is authenticated using the session data
+  if (req.session && req.session.user) {
+    return next();  // If user is authenticated, proceed to the next middleware/route handler
+  } else {
+    return res.status(401).json({ error: 'Not authenticated' });  // If no session data, deny access
   }
 };
 
 export default authMiddleware;
+
