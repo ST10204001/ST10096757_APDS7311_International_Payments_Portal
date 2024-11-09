@@ -1,0 +1,20 @@
+/* src/styles/Navbar.css */
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  background-color: #007bff;
+  padding: 1.5rem 2rem; /* Adjusted for a more balanced look */
+  width: 100%; /* Full-width */
+  max-width: 100%;
+  box-sizing: border-box; 
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}

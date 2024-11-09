@@ -1,44 +1,98 @@
 // src/components/Transaction.js
-import "./styles/components.css";  // Ensure you have this CSS for styling
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
+import Navbar from './Navbar';
+import './styles/Transaction.css';
 
 const Transaction = () => {
-let navigate = useNavigate();
-const [amount, setAmount] = useState('');
-    const [currency, setCurrency] = useState('');
-    const [paymentProvider, setPaymentProvider] = useState('');
+  const [userToSendTo, setUserToSendTo] = useState('');
+  const [userAccount, setUserAccount] = useState('');
+  const [amount, setAmount] = useState('');
+  const [currency, setCurrency] = useState('');
+  const [provider, setProvider] = useState('');
 
-  const handleTransactionSubmit = async (event) => {
-    event.preventDefault();
-    // Process the transaction here (e.g., send details to your backend)
-    // this is for the approved transaction, to show transaction details
-    const transactionDetails = {
-                amount,
-                currency,
-                paymentProvider,
-                transactionId: 'TXN1234567890', // Ideally, this would be generated dynamically
-                date: new Date().toLocaleDateString(),
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const transactionData = {
+      userToSendTo,
+      userAccount,
+      amount,
+      currency,
+      provider,
     };
-    
-    // After processing, navigate to the Approved Transaction screen
-    navigate('/approved-transaction');
+
+    try {
+      const response = await axios.post('https://localhost:3001/api/transaction', transactionData, {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        alert('Transaction successful!');
+        setUserToSendTo('');
+        setUserAccount('');
+        setAmount('');
+        setCurrency('');
+        setProvider('');
+      }
+    } catch (error) {
+      alert('Transaction failed. Please try again.');
+      console.error('Transaction error:', error);
+    }
   };
 
   return (
     <div className="transaction-container">
+      <Navbar/>
       <div className="transaction-content shadow-lg">
-        <h1>Transaction</h1>
-        <form>
+        <h1>New Transaction</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-row">
+            <div className="form-group">
+              <label>User to Send To:</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Recipient username"
+                value={userToSendTo}
+                onChange={(e) => setUserToSendTo(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Current User Account:</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Your account confirmation"
+                value={userAccount}
+                onChange={(e) => setUserAccount(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
           <div className="form-group">
             <label>Amount:</label>
-            <input type="number" required className="form-control" placeholder="Enter amount" />
+            <input
+              type="number"
+              className="form-control"
+              placeholder="Enter amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              required
+            />
           </div>
+
           <div className="form-group">
             <label>Currency:</label>
-            <select required className="form-control">
-              <option value="" disabled selected>Select Currency</option>
+            <select
+              className="form-control"
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              required
+            >
+              <option value="" disabled>Select Currency</option>
               <option value="USD">USD</option>
               <option value="EUR">EUR</option>
               <option value="GBP">GBP</option>
@@ -46,10 +100,16 @@ const [amount, setAmount] = useState('');
               <option value="ZAR">ZAR</option>
             </select>
           </div>
+
           <div className="form-group">
             <label>Payment Provider:</label>
-            <select required className="form-control">
-              <option value="" disabled selected>Select Payment Provider</option>
+            <select
+              className="form-control"
+              value={provider}
+              onChange={(e) => setProvider(e.target.value)}
+              required
+            >
+              <option value="" disabled>Select Provider</option>
               <option value="PayPal">PayPal</option>
               <option value="Stripe">Stripe</option>
               <option value="Square">Square</option>
@@ -57,7 +117,10 @@ const [amount, setAmount] = useState('');
               <option value="SWIFT">SWIFT</option>
             </select>
           </div>
-          <button type="submit" className="btn btn-primary">Pay</button>
+
+          <button type="submit" className="btn btn-primary">
+            Submit Transaction
+          </button>
         </form>
       </div>
     </div>
