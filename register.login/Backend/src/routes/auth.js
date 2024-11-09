@@ -39,9 +39,7 @@ router.post('/register', [
     }
 });
 
-// Login Route
-router.post('/login', async (req, res) => {
-    const { username, password, accountNumber } = req.body;
+
 // Login Route wuth validation
 router.post('/login', [
     bruteforce.prevent,
