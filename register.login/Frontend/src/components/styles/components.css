@@ -1,11 +1,13 @@
 /* components.css */
 .home-container, .transaction-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f8f9fa;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
   
   .home-content, .transaction-content {
     width: 100%;
@@ -17,6 +19,13 @@
     text-align: center;
   }
   
+  @media (max-width: 600px) {
+    .home-content, .transaction-content {
+        padding: 20px;
+        max-width: 90%; /* Allow more width on smaller screens */
+    }
+}
+
   .btn {
     width: 100%;
     padding: 10px;

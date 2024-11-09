@@ -1,7 +1,8 @@
 // src/components/Transaction.js
 import "./styles/components.css";  // Ensure you have this CSS for styling
-import React from 'react'; 
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 
 const Transaction = () => {
 let navigate = useNavigate();
