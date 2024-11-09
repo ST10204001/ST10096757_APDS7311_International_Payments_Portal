@@ -1,10 +1,7 @@
-import express from 'express';
-import https from 'https';
 import http from 'http';
+import https from 'https';
 import fs from 'fs';
-import mongoose from 'mongoose';
-import cors from 'cors'; // Import CORS
-import app from './App.js'; // Import the app from App.js
+import app from './src/App.js';
 
 // Add logging to verify requests
 app.use((req, res, next) => {

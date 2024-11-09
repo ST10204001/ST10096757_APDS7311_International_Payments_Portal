@@ -1,137 +1,43 @@
 import express from 'express';
-import cors from 'cors';
-import mongoose from 'mongoose';
-import cookieParser from 'cookie-parser';
-import cookieSession from 'cookie-session';
-import bcrypt from 'bcryptjs';
-import helmet from 'helmet';
-import expressBrute from 'express-brute';
-import rateLimit from 'express-rate-limit';
-import xssClean from 'xss-clean'; // XSS protection middleware
+import setupCors from './config/cors.js';
+import setupHelmet from './config/helmet.js';
+import setupRateLimit from './config/rateLimit.js';
+import setupSession from './config/session.js';
+import setupXSSProtection from './middleware/xssProtection.js';
+import connectDB from './config/db.js';
+import authRoutes from './routes/auth.js';
+import logger from './utils/logger.js';
+import setupHSTS from './config/hsts.js';  // Import the HSTS setup
+
 
 const app = express();
 
-// Trust the first proxy (for rate limiting to work properly with X-Forwarded-For header)
+// Trust the first proxy (if you're behind a reverse proxy)
 app.set('trust proxy', 1);
 
-// Middleware for CORS
-app.use(cors({
-    origin: 'https://localhost:5001',  // Frontend URL - allow your frontend to communicate with the backend
-    credentials: true, // Allow credentials such as cookies to be sent
-}));
+// Connect to the database
+connectDB();
 
-app.use(helmet({
-    frameguard: { action: 'deny' }, // Clickjacking protection
-}));
+// Set up middlewares
+app.use(logger);
+setupCors(app);
+setupHelmet(app);
+setupRateLimit(app);
+setupSession(app);
+setupXSSProtection(app);
 
-app.use(xssClean());  // Protect against XSS attacks
+// JSON body parser
 app.use(express.json());  // JSON body parser
-app.use(cookieParser());  // Cookie parser
-app.use(cookieSession({
-    name: 'session',
-    keys: ['your_secret_key'],  // Use a strong secret key
-    maxAge: 24 * 60 * 60 * 1000  // 24 hours
-}));
 
-// Rate Limiting Setup
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,  // 15 minutes
-    max: 100,  // Limit each IP to 100 requests per window
-});
-app.use(limiter);
+// Set up HSTS
+setupHSTS(app);
 
-// Set HSTS (HTTP Strict Transport Security)
-app.use((req, res, next) => {
-    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains"); // HSTS
-    next();
-});
-
-const memoryStore = new expressBrute.MemoryStore();  // In-memory store for Brute Force protection
-const bruteforce = new expressBrute(memoryStore, {
-    freeRetries: 5,
-    minWait: 5000,
-    maxWait: 60000,
-    lifetime: 3600,
-});
-
-// MongoDB Connection
-mongoose.connect('mongodb+srv://monajackson98:Kc9gZY2EAkj5mIs9@cluster0.uxhruuc.mongodb.net/test', { 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true 
-}).then(() => {
-    console.log('Database connected successfully');
-}).catch(err => {
-    console.error('Error connecting to MongoDB:', err);
-});
-
-// User Schema and Model
-const userSchema = new mongoose.Schema({
-    username: String,
-    userFirstName: String,
-    userLastName: String,
-    password: String,
-    idNumber: String,
-    accountNumber: String
-});
-
-const User = mongoose.model('users', userSchema);
-
-// Register Route
-app.post('/api/register', bruteforce.prevent, async (req, res) => {
-    console.log('Received request for registration:', req.body);
-    const { username, password, userFirstName, userLastName, idNumber, accountNumber } = req.body;
-
-    try {
-        const existingUser = await User.findOne({ username });
-        if (existingUser) {
-            return res.status(400).json({ error: 'Username already exists' });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({
-            username,
-            userFirstName,
-            userLastName,
-            password: hashedPassword,
-            idNumber,
-            accountNumber,
-        });
-
-        await newUser.save();
-        res.status(201).json({ message: 'User registered successfully' });
-    } catch (error) {
-        console.error('Error registering user:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
-
-// Login Route
-app.post('/api/login', bruteforce.prevent, async (req, res) => {
-    const { username, password } = req.body;
-
-    // Check if user exists and compare passwords
-    const user = await User.findOne({ username });
-    if (user && (await bcrypt.compare(password, user.password))) {
-        
-        // Set the cookie with user._id after successful login
-        res.cookie('userToken', user._id.toString(), {
-            httpOnly: true, // Prevents access to cookie from JavaScript
-            secure: process.env.NODE_ENV === 'production', // Only secure in production
-            sameSite: 'Strict', // Helps prevent CSRF attacks
-        });
-
-        // Respond with a success message
-        res.status(200).send('Login successful');
-    } else {
-        // If credentials are invalid, respond with an error
-        res.status(401).send('Invalid credentials');
-    }
-});
+// Register routes
+app.use('/api', authRoutes);
 
 // Health Check Route
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'UP' });
 });
 
-// Export the app
 export default app;
