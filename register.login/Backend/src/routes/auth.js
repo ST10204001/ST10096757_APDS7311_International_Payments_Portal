@@ -39,6 +39,9 @@ router.post('/register', [
     }
 });
 
+// Login Route
+router.post('/login', async (req, res) => {
+    const { username, password, accountNumber } = req.body;
 // Login Route wuth validation
 router.post('/login', [
     bruteforce.prevent,
@@ -52,30 +55,38 @@ router.post('/login', [
     
     const { username, password, isEmployee } = req.body;
 
-    const user = await User.findOne({ username });
-    if (!user) {
-        return res.status(401).send('Invalid credentials');
-    }
+    try {
+        // Find the user by username
+        const user = await User.findOne({ username });
 
-    // If it's an employee login attempt, check if the user is an employee
-    if (isEmployee && !user.isEmployee) {
-        return res.status(401).send('Employee login required');
-    }
+        if (!user) {
+            return res.status(400).json({ error: 'Invalid username or password' });
+        }
 
-    // If it's a regular user login attempt, ensure user is not an employee
-    if (!isEmployee && user.isEmployee) {
-        return res.status(401).send('Regular user login required');
-    }
-
-    if (await user.isPasswordMatch(password)) {
-        res.cookie('userToken', user._id.toString(), {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Strict',
-        });
-        res.status(200).send('Login successful');
-    } else {
-        res.status(401).send('Invalid credentials');
+        // Check if the user is an employee
+        if (user.isEmployee) {
+            // Employee login does not require account number
+            if (await bcrypt.compare(password, user.password)) {
+                // Respond with success for employee login
+                return res.status(200).json({ message: 'Employee login successful' });
+            } else {
+                return res.status(400).json({ error: 'Invalid password' });
+            }
+        } else {
+            // Normal user login requires account number
+            if (user.accountNumber !== accountNumber) {
+                return res.status(400).json({ error: 'Invalid account number' });
+            }
+            if (await bcrypt.compare(password, user.password)) {
+                // Respond with success for regular user login
+                return res.status(200).json({ message: 'User login successful' });
+            } else {
+                return res.status(400).json({ error: 'Invalid password' });
+            }
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 

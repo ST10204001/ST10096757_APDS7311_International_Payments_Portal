@@ -123,10 +123,11 @@ const LoginRegister = () => {
         const loginData = {
             username,
             password,
-            isEmployee,  // Pass the employee status
+            accountNumber, // Include only if it's a normal user login
         };
-
+    
         try {
+            // Send the login data to the backend API
             const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
@@ -135,17 +136,17 @@ const LoginRegister = () => {
                 body: JSON.stringify(loginData),
                 credentials: 'include', // Allow cookies to be sent
             });
-
+    
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const responseBody = await response.json(); // Capture the error response
+                console.error('Login failed:', responseBody); // Log the error
+                throw new Error(`HTTP error! status: ${response.status}, message: ${responseBody.error}`);
             }
-
-            const responseData = await response.json(); // Parse JSON response
+    
+            const responseData = await response.json();
             console.log('Login success:', responseData);
             setSuccessMessage('Login successful');
             setError(null);
-
-            // Redirect to the home page after successful login
             navigate('/home');
         } catch (err) {
             console.error('Login error:', err);
