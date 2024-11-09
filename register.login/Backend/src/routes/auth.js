@@ -11,10 +11,9 @@ const router = express.Router();
 router.post('/register', [
     bruteforce.prevent,
     body('username').matches(/^[a-zA-Z0-9]{3,20}$/).withMessage('Username must be 3-20 alphanumeric characters'),
-    body('password').isLength({ min: 6 }).matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/).withMessage('Password must be at least 6 characters, including at least one letter and one number'),
+    body('password').isLength({ min: 6 }).matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/).withMessage('Password must be at least 6 characters, including at least one letter, one number, and can contain special characters'),
     body('idNumber').matches(/^[0-9]{13}$/).withMessage('ID Number must be a 13-digit number'),
     body('accountNumber').matches(/^[0-9]{10}$/).withMessage('Account Number must be a 10-digit number'),
-    
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -39,10 +38,7 @@ router.post('/register', [
     }
 });
 
-// Login Route
-router.post('/login', async (req, res) => {
-    const { username, password, accountNumber } = req.body;
-// Login Route wuth validation
+// Login Route with Validation and Employee Logic
 router.post('/login', [
     bruteforce.prevent,
     body('username').notEmpty().withMessage('Username is required'),
@@ -52,8 +48,8 @@ router.post('/login', [
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    
-    const { username, password, isEmployee } = req.body;
+
+    const { username, password, isEmployee, accountNumber } = req.body;
 
     try {
         // Find the user by username
