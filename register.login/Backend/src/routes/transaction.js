@@ -1,20 +1,15 @@
 import express from 'express';
-import Transaction from '../models/Transaction.js'; // Import Transaction model
-import authenticateUser from '../middleware/authMiddleware.js'; // Default import
+import Transaction from '../models/Transaction.js'; 
+import authMiddleware from '../middleware/authMiddleware.js';  // Import the updated middleware
 
 const router = express.Router();
 
-// Apply the authentication middleware to this route
-router.post('/transaction', authenticateUser, async (req, res) => {
+// Protect the /transaction route with authentication middleware
+router.post('/transaction', authMiddleware, async (req, res) => {
   const { userToSendTo, userAccount, amount, currency, provider } = req.body;
 
   try {
-    // Assuming you have authentication logic here to check if the user is logged in
-    if (!req.session.user || !req.session.user.id) {
-      return res.status(401).json({ error: 'Unauthorized. Please log in.' });
-    }
-
-    const userId = req.session.user.id; // Get the user ID from the session
+    const userId = req.session.user.id; // Retrieve the user ID from session
 
     const transaction = new Transaction({
       user: userId,

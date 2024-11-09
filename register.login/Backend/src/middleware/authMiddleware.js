@@ -2,14 +2,14 @@
 //import jwt from 'jsonwebtoken'; // Remove if not used
 //import User from '../models/user.js';
 
-const authenticateUser = (req, res, next) => {
-  // Check if the user is authenticated (adjust this logic as per your authentication method)
-  if (req.isAuthenticated()) {
-    req.user = req.user || {}; // Assuming req.user is set after login
-    return next();
+const authMiddleware = (req, res, next) => {
+  // Check if the user is authenticated using the session data
+  if (req.session && req.session.user) {
+    return next();  // If user is authenticated, proceed to the next middleware/route handler
   } else {
-    return res.status(401).json({ error: 'Not authenticated' });
+    return res.status(401).json({ error: 'Not authenticated' });  // If no session data, deny access
   }
 };
 
-export default authenticateUser;  // Default export
+export default authMiddleware;
+
