@@ -15,6 +15,32 @@ const LoginRegister = () => {
 
     const navigate = useNavigate(); 
 
+  const validateInput = () => {
+         const usernamePattern = /^[a-zA-Z0-9]{3,20}$/;  // Alphanumeric, 3-20 characters
+         const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;  // Minimum six characters, at least one letter and one number
+         const idNumberPattern = /^[0-9]{13}$/;  // 13 digit number
+         const accountNumberPattern = /^[0-9]{10}$/;  // 10 digit number
+ 
+         if (!usernamePattern.test(username)) {
+             setError("Username must be 3-20 alphanumeric characters.");
+             return false;
+         }
+         if (!passwordPattern.test(password)) {
+             setError("Password must be at least 6 characters, including at least one letter and one number.");
+             return false;
+         }
+         if (!isLogin && !idNumberPattern.test(idNumber)) {
+             setError("ID Number must be a 13-digit number.");
+             return false;
+         }
+         if (!isLogin && !accountNumberPattern.test(accountNumber)) {
+             setError("Account Number must be a 10-digit number.");
+             return false;
+         }
+         setError(null);
+         return true;
+     }   
+    
     // Error message display
     const ErrorMessage = () => {
         if (error) {
@@ -39,6 +65,10 @@ const LoginRegister = () => {
             setError('Employees cannot register through this form. Please contact an admin.');
             return;
         }
+
+        if (!validateInput()) { 
+            return; 
+        }  
 
         const userData = {
             username,
@@ -85,7 +115,11 @@ const LoginRegister = () => {
     // Login handler
     const handleLogin = async (e) => {
         e.preventDefault();
-    
+
+        if (!validateInput()) { 
+            return;
+         }  
+
         const loginData = {
             username,
             password,
