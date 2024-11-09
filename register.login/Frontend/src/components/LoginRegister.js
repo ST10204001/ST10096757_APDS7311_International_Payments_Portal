@@ -22,19 +22,19 @@ const LoginRegister = () => {
          const accountNumberPattern = /^[0-9]{10}$/;  // 10 digit number
  
          if (!usernamePattern.test(username)) {
-             setError("Username must be 3-20 alphanumeric characters.");
+             setError("Invalid input. Please try again.");
              return false;
          }
          if (!passwordPattern.test(password)) {
-             setError("Password must be at least 6 characters, including at least one letter and one number.");
+             setError("Invalid input. Please try again.");
              return false;
          }
          if (!isLogin && !idNumberPattern.test(idNumber)) {
-             setError("ID Number must be a 13-digit number.");
+             setError("Invalid input. Please try again..");
              return false;
          }
          if (!isLogin && !accountNumberPattern.test(accountNumber)) {
-             setError("Account Number must be a 10-digit number.");
+             setError("Invalid input. Please try again.");
              return false;
          }
          setError(null);
