@@ -81,19 +81,35 @@ const Home = () => {
 
                 {/* Main Content Section with Recent Transactions and Alerts */}
                 <div className="main-content-boxes">
-                    <div className="transactions-box">
-                        <h3>Recent Transactions</h3>
-                        <ul>
-                            {recentTransactions.map(tx => (
-                                <li key={tx.id}>
-                                    <p><strong>Recipient:</strong> {tx.recipient}</p>
-                                    <p><strong>Amount:</strong> {tx.amount}</p>
-                                    <p><strong>Status:</strong> {tx.status}</p>
-                                    <p><strong>Date:</strong> {tx.date}</p>
-                                </li>
-                            ))}
-                        </ul>
+                <div className="transactions-box">
+    <h2>Recent Transactions</h2>
+    <ul>
+        {recentTransactions.map(tx => (
+            <li key={tx.id} className="transaction-card">
+                <h3 className="transaction-recipient">{tx.recipient}</h3>
+                <div className="transaction-details">
+                    <div className="transaction-item">
+                        <span className="label">Recipient:</span>
+                        <span>{tx.recipient}</span>
                     </div>
+                    <div className="transaction-item">
+                        <span className="label">Amount:</span>
+                        <span>{tx.amount}</span>
+                    </div>
+                    <div className="transaction-item">
+                        <span className="label">Status:</span>
+                        <span>{tx.status}</span>
+                    </div>
+                    <div className="transaction-item">
+                        <span className="label">Date:</span>
+                        <span>{tx.date}</span>
+                    </div>
+                </div>
+            </li>
+        ))}
+    </ul>
+</div>
+
                 </div>
             </div>
         </div>
