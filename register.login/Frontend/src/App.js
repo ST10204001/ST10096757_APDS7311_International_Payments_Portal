@@ -5,6 +5,7 @@ import LoginRegister from './components/LoginRegister';
 import Transaction from './components/Transaction';
 import Home from './components/Home';
 import ApprovedTransaction from './components/ApprovedTransaction';
+import PendingTransaction from './components/PendingTransaction';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path='/' element={<LoginRegister />} />
           <Route path='/home' element={<Home />} />
           <Route path='/transaction' element={<Transaction />} />
+          <Route path="/pending-transaction" element={<PendingTransaction />} />
           <Route path='/approved-transaction' element={<ApprovedTransaction />} />
         </Routes>
       </div>

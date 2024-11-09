@@ -13,7 +13,7 @@ const [amount, setAmount] = useState('');
   const handleTransactionSubmit = async (event) => {
     event.preventDefault();
     // Process the transaction here (e.g., send details to your backend)
-    // this is for the approved transaction, to show transaction details
+    // this is for the pending transaction, to show transaction details
     const transactionDetails = {
                 amount,
                 currency,
@@ -22,9 +22,8 @@ const [amount, setAmount] = useState('');
                 date: new Date().toLocaleDateString(),
     };
     
-    // After processing, navigate to the Approved Transaction screen
-    navigate('/approved-transaction');
-  };
+    // After processing, navigate to the Pending Transaction screen 
+    navigate('/pending-transaction', { state: { transaction: transactionDetails } }); };
 
   return (
     <div className="transaction-container">
