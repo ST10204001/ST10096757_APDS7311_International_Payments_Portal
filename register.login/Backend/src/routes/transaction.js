@@ -45,15 +45,16 @@ router.post('/transaction', authMiddleware, async (req, res) => {
 });
 
 
-//endpoint to fetch all transactions 
-router.get('/transactions', authMiddleware, async (req, res) => {
-      try {        
-        const transactions = await Transaction.find();        
-        res.json(transactions);    
-      } catch (error) {        
-        console.error('Error fetching transactions:', error);        
-        res.status(500).json({ error: 'Failed to fetch transactions' });    
-      }
+//endpoint to fetch all transactions including sender and recipient details
+router.get('\transactions', authMiddleware, async (req, res) => {  
+  try {    
+    const transactions = await Transaction.find().populate('user userToSendTo');    
+    console.log(transactions); //Log the transactions to check if user details are included    
+    res.json(transactions);  
+  } catch (error) {    
+    console.error('Error fetching transactions:', error);    
+    res.status(500).json({ error: 'Failed to fetch transactions' });  
+  }
 });
 
 // Endpoint to submit transaction to SWIFT 

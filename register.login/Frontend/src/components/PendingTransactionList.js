@@ -30,6 +30,8 @@ const PendingTransactionList = () => {
                 {transactions.length > 0 ? (
                     transactions.map(transaction => (
                         <div key={transaction._id} className="transaction-item" onClick={() => handleTransactionClick(transaction)}>
+                            <p><strong>Sender:</strong> {transaction.user.username} ({transaction.user.userFirstName} {transaction.user.userLastName})</p> 
+                            <p><strong>Recipient:</strong> {transaction.userToSendTo.username} ({transaction.userToSendTo.userFirstName} {transaction.userToSendTo.userLastName})</p> 
                             <p><strong>Transaction ID:</strong> {transaction._id}</p>
                             <p><strong>Amount:</strong> ${transaction.amount}</p>
                             <p><strong>Currency:</strong> {transaction.currency}</p>
