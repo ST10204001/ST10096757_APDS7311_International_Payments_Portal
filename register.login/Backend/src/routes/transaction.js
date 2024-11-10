@@ -43,7 +43,7 @@ router.post('/transaction', authMiddleware, async (req, res) => {
 
 
 //endpoint to fetch all transactions 
-router.get('\transactions', authMiddleware, async (req, res) => {
+router.get('/transactions', authMiddleware, async (req, res) => {
       try {        
         const transactions = await Transaction.find();        
         res.json(transactions);    
