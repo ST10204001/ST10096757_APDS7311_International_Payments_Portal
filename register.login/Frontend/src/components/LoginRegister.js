@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
+//import '/Users/salihadams/ST10096757_APDS7311_International_Payments_Portal/register.login/Frontend/src/components/styles/LoginRegister.css';
 
 const LoginRegister = () => {
     const [username, setUserName] = useState('');
@@ -16,11 +17,12 @@ const LoginRegister = () => {
     const navigate = useNavigate(); 
 
   const validateInput = () => {
-         const usernamePattern = /^[a-zA-Z0-9]{3,20}$/;  // Alphanumeric, 3-20 characters
-         const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
-         const idNumberPattern = /^[0-9]{13}$/;  // 13 digit number
-         const accountNumberPattern = /^[0-9]{10}$/;  // 10 digit number
- 
+    const usernamePattern = /^[a-zA-Z0-9_]+$/;
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W]{8,}$/;
+    const namePattern = /^[a-zA-Z\s]+$/;
+    const idNumberPattern = /^\d{13}$/;
+    const accountNumberPattern = /^\d{8,12}$/;
+
          if (!usernamePattern.test(username)) {
              setError("Invalid input. Please try again.");
              return false;
@@ -29,14 +31,19 @@ const LoginRegister = () => {
              setError("Invalid input. Please try again.");
              return false;
          }
+         if (!isEmployee && !accountNumberPattern.test(accountNumber)) {
+            setError("Invalid input. Please try again.");
+            return false;
+        }
          if (!isLogin && !idNumberPattern.test(idNumber)) {
              setError("Invalid input. Please try again..");
              return false;
          }
-         if (!isLogin && !accountNumberPattern.test(accountNumber)) {
-             setError("Invalid input. Please try again.");
-             return false;
-         }
+         if (!isLogin && !namePattern.test(userFirstName)) {
+            setError("Invalid input. Please try again.");
+            return false;
+        }
+
          setError(null);
          return true;
      }   
@@ -147,7 +154,8 @@ const LoginRegister = () => {
             console.log('Login success:', responseData);
             setSuccessMessage('Login successful');
             setError(null);
-            navigate('/home');
+            // Pass `isEmployee` as part of the state object with navigate
+            navigate('/home', { state: { isEmployee } });
         } catch (err) {
             console.error('Login error:', err);
             setError(err.message || 'Something went wrong');
