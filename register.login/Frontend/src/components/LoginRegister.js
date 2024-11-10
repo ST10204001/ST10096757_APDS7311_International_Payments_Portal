@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
-//import '/Users/salihadams/ST10096757_APDS7311_International_Payments_Portal/register.login/Frontend/src/components/styles/LoginRegister.css';
+import './styles/LoginRegister.css';
+import { UserContext } from '../context/UserContext'; 
 
 const LoginRegister = () => {
+    
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [userFirstName, setUserFirstName] = useState('');
@@ -15,6 +17,8 @@ const LoginRegister = () => {
     const [isLogin, setIsLogin] = useState(true); // For toggling between login/register forms
 
     const navigate = useNavigate(); 
+    // Access user and setUser from UserContext
+    const { user, setUser } = useContext(UserContext);
 
   const validateInput = () => {
     const usernamePattern = /^[a-zA-Z0-9_]+$/;
@@ -122,39 +126,42 @@ const LoginRegister = () => {
     // Login handler
     const handleLogin = async (e) => {
         e.preventDefault();
-
-        if (!validateInput()) { 
+    
+        if (!validateInput()) {
+            console.log("Validation failed.");
             return;
-         }  
-
+        }
+    
         const loginData = {
             username,
             password,
-            accountNumber, // Include only if it's a normal user login
+            accountNumber,
         };
     
         try {
-            // Send the login data to the backend API
             const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(loginData),
-                credentials: 'include', // Allow cookies to be sent
+                credentials: 'include',
             });
     
             if (!response.ok) {
-                const responseBody = await response.json(); // Capture the error response
-                console.error('Login failed:', responseBody); // Log the error
-                throw new Error(`HTTP error! status: ${response.status}, message: ${responseBody.error}`);
+                const responseBody = await response.text(); // Change to text to handle non-JSON responses
+                console.error('Login failed:', responseBody);
+                setError(responseBody || `HTTP error! status: ${response.status}`);
+                return;
             }
     
             const responseData = await response.json();
             console.log('Login success:', responseData);
+    
             setSuccessMessage('Login successful');
             setError(null);
-            // Pass `isEmployee` as part of the state object with navigate
+            setUser(responseData.user);
+    
             navigate('/home', { state: { isEmployee } });
         } catch (err) {
             console.error('Login error:', err);
@@ -162,6 +169,7 @@ const LoginRegister = () => {
             setSuccessMessage(null);
         }
     };
+    
 
     // Toggle between Login and Register Forms
     const toggleForm = () => {
