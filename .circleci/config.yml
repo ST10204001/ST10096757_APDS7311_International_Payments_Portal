@@ -11,9 +11,12 @@ jobs:
     steps:
       - checkout  # Check out the source code
       - run:
+          name: List files for debugging
+          command: ls -R  # Recursively list files to verify directory structure
+      - run:
           name: Navigate to frontend directory and Install Dependencies
           command: |
-            cd ST10096757_APDS7311_International_Payments_Portal/register.login/Frontend
+            cd register.login/Frontend
             npm install
 
       - run:
@@ -28,7 +31,7 @@ jobs:
       - run:
           name: Navigate to backend directory and Install Dependencies
           command: |
-            cd ST10096757_APDS7311_International_Payments_Portal/register.login/Backend
+            cd register.login/Backend 
             npm install
 
       - run:
