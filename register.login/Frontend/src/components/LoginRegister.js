@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
+//import '/Users/salihadams/ST10096757_APDS7311_International_Payments_Portal/register.login/Frontend/src/components/styles/LoginRegister.css';
 
 const LoginRegister = () => {
     const [username, setUserName] = useState('');
