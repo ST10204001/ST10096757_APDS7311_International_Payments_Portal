@@ -1,18 +1,36 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from "axios";
 import Navbar from './Navbar';
 import { useNavigate } from "react-router-dom";
 import "./styles/Home.css"; // or "./styles/components.css"
 
+
 const Home = () => {
+  const location = useLocation();
+  const isEmployee = location.state?.isEmployee;
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [userName, setUserName] = useState('John Doe'); // Sample user name
   const [balance, setBalance] = useState('$10,000.00');
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [alerts, setAlerts] = useState([]);
+  const [userRole, setUserRole] = useState(null);  // Define userRole state here
 
   useEffect(() => {
+
+      // Function to set user role based on isEmployee variable
+      const setRoleBasedOnEmployeeStatus = () => {
+        if (isEmployee) {
+          setUserRole("employee"); // Set role to 'employee' if isEmployee is true
+        } else {
+          setUserRole("user");
+        }
+      };
+
+        // Call the role-setting function
+    setRoleBasedOnEmployeeStatus();
+
     // Simulated fetch for transactions and alerts
     const fetchTransactions = async () => {
       setRecentTransactions([
@@ -26,8 +44,10 @@ const Home = () => {
         { id: 2, message: 'Unusual login activity detected.' }
       ]);
     };
+
     fetchTransactions();
-  }, []);
+  }, [isEmployee]);  // Re-run the effect if isEmployee changes
+
 
   const handleLogout = async () => {
     try {
@@ -47,7 +67,7 @@ const Home = () => {
   };
 
   if (!isLoggedIn) {
-    navigate("/login");
+    navigate("/");
   }
 
   return (
@@ -114,6 +134,18 @@ const Home = () => {
             </ul>
           </div>
         </div>
+
+     {/* Conditional Buttons for User or Employee Roles */}
+     {userRole === 'user' && (
+          <button className="btn btn-primary" onClick={() => navigate("/approved-transaction")}>
+            Approved Transactions
+          </button>
+        )}
+        {userRole === 'employee' && (
+          <button className="btn btn-primary" onClick={() => navigate("/pending-transaction")}>
+            Pending Transactions
+          </button>
+        )}
 
         {/* Buttons for Making Transactions and Logging Out */}
         <button className="btn btn-primary" onClick={handleTransaction}>Make a Transaction</button>
