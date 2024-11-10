@@ -21,7 +21,8 @@
     "start": "cross-env HTTPS=true PORT=5001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "remove-flow": "npm uninstall flow-bin"
   },
   "eslintConfig": {
     "extends": [
