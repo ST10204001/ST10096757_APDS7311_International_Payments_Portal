@@ -11,18 +11,17 @@ jobs:
     steps:
       - checkout  # Check out the source code
       - run:
-          name: List files for debugging
-          command: ls -R  # Recursively list files to verify directory structure
-      - run:
           name: Navigate to frontend directory and Install Dependencies
           command: |
             cd register.login/Frontend
             npm install
-
       - run:
           name: Run SonarQube Scan for Frontend
           command: |
-            sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORG -Dsonar.login=$SONAR_TOKEN
+            sonar-scanner -Dsonar.projectKey=ST10204001_ST10096757_APDS7311_International_Payments_Portal \
+              -Dsonar.organization=Imrah \
+              -Dsonar.login=$SONAR_TOKEN \
+              -Dsonar.branch.name=main
 
   backend:
     executor: docker-executor
@@ -31,13 +30,15 @@ jobs:
       - run:
           name: Navigate to backend directory and Install Dependencies
           command: |
-            cd register.login/Backend 
+            cd register.login/Backend
             npm install
-
       - run:
           name: Run SonarQube Scan for Backend
           command: |
-            sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORG -Dsonar.login=$SONAR_TOKEN
+            sonar-scanner -Dsonar.projectKey=ST10204001_ST10096757_APDS7311_International_Payments_Portal \
+              -Dsonar.organization=Imrah \
+              -Dsonar.login=$SONAR_TOKEN \
+              -Dsonar.branch.name=main
 
 workflows:
   version: 2
