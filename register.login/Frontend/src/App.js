@@ -6,7 +6,7 @@ import LoginRegister from './components/LoginRegister';
 import Transaction from './components/Transaction';
 import Home from './components/Home';
 import PendingTransaction from './components/PendingTransaction';
-import PendingTransactionList from './components/PendingTransaction';
+import PendingTransactionList from './components/PendingTransactionList';
 import ApprovedTransaction from './components/ApprovedTransaction';
 import Profile from './components/Profile';
 
