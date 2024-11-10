@@ -28,11 +28,8 @@ router.post('/transaction', authMiddleware, async (req, res) => {
       amount,
       currency,
       provider,
-<<<<<<< HEAD
       status: 'pending'  // Add status field to track the transaction state
-=======
-      //status: 'pending' // Add status field to track the transaction state
->>>>>>> 9f3e2a4fe62d985e2f3015f2fe8b67f91d42afef
+
     });
 
     await transaction.save();
@@ -44,8 +41,7 @@ router.post('/transaction', authMiddleware, async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-=======
+
 //endpoint to fetch all transactions 
 router.get('\transactions', authMiddleware, async (req, res) => {
       try {        
@@ -81,5 +77,5 @@ router.post('/transactions/deny/:id', authMiddleware, async (req, res) => {
   }
 });
 
->>>>>>> 9f3e2a4fe62d985e2f3015f2fe8b67f91d42afef
+
 export default router;
