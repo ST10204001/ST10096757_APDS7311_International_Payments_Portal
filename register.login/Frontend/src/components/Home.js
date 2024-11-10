@@ -45,12 +45,14 @@ const Home = () => {
     fetchTransactions();
   }, [isEmployee]);
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/'); // Redirect to login if not authenticated
-    }
-  }, [user, navigate]);
+  //Update this method. Can't access home with this
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate('/'); // Redirect to login if not authenticated
+  //   }
+  // }, [user, navigate]);
 
+  //this don't work either
   const handleLogout = async () => {
     try {
       await axios.post("http://localhost:5000/api/logout", {}, { withCredentials: true });

@@ -76,12 +76,12 @@ router.post('/login', [
                 // Respond with success for employee login
                 return res.status(200).json({ message: 'Employee login successful' });
             } else {
-                return res.status(400).json({ error: 'Invalid password' });
+                return res.status(400).json({ error: 'Invalid input. Please try again.' });
             }
         } else {
             // Regular user login requires account number verification
             if (user.accountNumber !== accountNumber) {
-                return res.status(400).json({ error: 'Invalid account number' });
+                return res.status(400).json({ error: 'Invalid input. Please try again.' });
             }
 
             const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -99,7 +99,7 @@ router.post('/login', [
                 // Respond with success for regular user login
                 return res.status(200).json({ message: 'User login successful' });
             } else {
-                return res.status(400).json({ error: 'Invalid password' });
+                return res.status(400).json({ error: 'Invalid input. Please try again.' });
             }
         }
     } catch (error) {
