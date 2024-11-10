@@ -17,7 +17,7 @@ const LoginRegister = () => {
 
   const validateInput = () => {
          const usernamePattern = /^[a-zA-Z0-9]{3,20}$/;  // Alphanumeric, 3-20 characters
-         const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;  // Minimum six characters, at least one letter and one number
+         const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
          const idNumberPattern = /^[0-9]{13}$/;  // 13 digit number
          const accountNumberPattern = /^[0-9]{10}$/;  // 10 digit number
  
