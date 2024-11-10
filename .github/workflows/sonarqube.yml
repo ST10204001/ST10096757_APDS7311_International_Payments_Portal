@@ -29,7 +29,7 @@
              key: ${{ runner.os }}-sonar-${{ hashFiles('**/sonar-project.properties') }}
 
          - name: SonarQube Scan
-           uses: sonarsource/sonarcloud-github-action@main
+           uses: sonarsource/sonarcloud-github-action@master
            with:
              organization: ${{ secrets.SONAR_ORG }}
              projectKey: ${{ secrets.SONAR_PROJECT_KEY }}
