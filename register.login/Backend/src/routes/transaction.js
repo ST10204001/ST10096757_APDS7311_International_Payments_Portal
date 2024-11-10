@@ -1,6 +1,7 @@
 import express from 'express';
 import Transaction from '../models/Transaction.js'; 
-import authMiddleware from '../middleware/authMiddleware.js';  // Import the updated middleware
+import User from '../models/User.js';  // Import the User model
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -10,7 +11,16 @@ router.post('/transaction', authMiddleware, async (req, res) => {
 
   try {
     const userId = req.session.user.id; // Retrieve the user ID from session
+    
+    // Fetch the user from the database to validate the account number
+    const user = await User.findById(userId);
+    
+    // Check if the account number entered matches the one stored in the user's record
+    if (userAccount !== user.accountNumber) {
+      return res.status(400).json({ error: 'Account number does not match your registered account.' });
+    }
 
+    // If account number matches, proceed with the transaction
     const transaction = new Transaction({
       user: userId,
       userToSendTo,
@@ -18,7 +28,8 @@ router.post('/transaction', authMiddleware, async (req, res) => {
       amount,
       currency,
       provider,
-      //status: 'pending' // Add status field to track the transaction state
+      status: 'pending'  // Add status field to track the transaction state
+
     });
 
     await transaction.save();
@@ -29,6 +40,7 @@ router.post('/transaction', authMiddleware, async (req, res) => {
     res.status(500).json({ error: 'Transaction failed. Please try again.' });
   }
 });
+
 
 //endpoint to fetch all transactions 
 router.get('\transactions', authMiddleware, async (req, res) => {
@@ -64,5 +76,6 @@ router.post('/transactions/deny/:id', authMiddleware, async (req, res) => {
     res.status(500).json({ error: 'Failed to deny transaction' });
   }
 });
+
 
 export default router;
