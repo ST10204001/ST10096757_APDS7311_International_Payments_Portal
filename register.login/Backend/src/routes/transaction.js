@@ -28,7 +28,11 @@ router.post('/transaction', authMiddleware, async (req, res) => {
       amount,
       currency,
       provider,
+<<<<<<< HEAD
       status: 'pending'  // Add status field to track the transaction state
+=======
+      //status: 'pending' // Add status field to track the transaction state
+>>>>>>> 9f3e2a4fe62d985e2f3015f2fe8b67f91d42afef
     });
 
     await transaction.save();
@@ -40,4 +44,42 @@ router.post('/transaction', authMiddleware, async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
+=======
+//endpoint to fetch all transactions 
+router.get('\transactions', authMiddleware, async (req, res) => {
+      try {        
+        const transactions = await Transaction.find();        
+        res.json(transactions);    
+      } catch (error) {        
+        console.error('Error fetching transactions:', error);        
+        res.status(500).json({ error: 'Failed to fetch transactions' });    
+      }
+});
+
+// Endpoint to approve a transaction
+router.post('/transactions/approve/:id', authMiddleware, async (req, res) => {
+  try {
+    const transactionId = req.params.id;
+    await Transaction.findByIdAndUpdate(transactionId, { status: 'approved' });
+    res.json({ message: 'Transaction approved!' });
+  } catch (error) {
+    console.error('Error approving transaction:', error);
+    res.status(500).json({ error: 'Failed to approve transaction' });
+  }
+});
+
+// Endpoint to deny a transaction
+router.post('/transactions/deny/:id', authMiddleware, async (req, res) => {
+  try {
+    const transactionId = req.params.id;
+    await Transaction.findByIdAndUpdate(transactionId, { status: 'denied' });
+    res.json({ message: 'Transaction denied!' });
+  } catch (error) {
+    console.error('Error denying transaction:', error);
+    res.status(500).json({ error: 'Failed to deny transaction' });
+  }
+});
+
+>>>>>>> 9f3e2a4fe62d985e2f3015f2fe8b67f91d42afef
 export default router;
