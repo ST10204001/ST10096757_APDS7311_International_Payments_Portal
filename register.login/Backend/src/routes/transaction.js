@@ -18,7 +18,7 @@ router.post('/transaction', authMiddleware, async (req, res) => {
       amount,
       currency,
       provider,
-      status: 'pending' // Add status field to track the transaction state
+      //status: 'pending' // Add status field to track the transaction state
     });
 
     await transaction.save();
@@ -30,15 +30,15 @@ router.post('/transaction', authMiddleware, async (req, res) => {
   }
 });
 
-// Endpoint to fetch pending transactions
-router.get('/transactions/pending', authMiddleware, async (req, res) => {
-  try {
-    const transactions = await Transaction.find({ status: 'pending' });
-    res.json(transactions);
-  } catch (error) {
-    console.error('Error fetching transactions:', error);
-    res.status(500).json({ error: 'Failed to fetch transactions' });
-  }
+//endpoint to fetch all transactions 
+router.get('\transactions', authMiddleware, async (req, res) => {
+      try {        
+        const transactions = await Transaction.find();        
+        res.json(transactions);    
+      } catch (error) {        
+        console.error('Error fetching transactions:', error);        
+        res.status(500).json({ error: 'Failed to fetch transactions' });    
+      }
 });
 
 // Endpoint to approve a transaction
