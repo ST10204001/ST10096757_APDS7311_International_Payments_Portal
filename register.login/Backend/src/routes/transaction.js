@@ -24,6 +24,12 @@ router.post('/transaction', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Account number does not match your registered account.' });
     }
 
+// Find the recipient user by username 
+  const recipient = await User.findOne({ username: userToSendTo }); 
+  if (!recipient) { 
+    return res.status(400).json({ error: 'Recipient user not found.' }); 
+  }
+
     // Proceed with creating the transaction if validation passes
     const transaction = new Transaction({
       user: userId,
@@ -46,15 +52,17 @@ router.post('/transaction', authMiddleware, async (req, res) => {
 
 
 //endpoint to fetch all transactions including sender and recipient details
-router.get('\transactions', authMiddleware, async (req, res) => {  
-  try {    
-    const transactions = await Transaction.find().populate('user userToSendTo');    
-    console.log(transactions); //Log the transactions to check if user details are included    
-    res.json(transactions);  
-  } catch (error) {    
-    console.error('Error fetching transactions:', error);    
-    res.status(500).json({ error: 'Failed to fetch transactions' });  
-  }
+router.get('/transactions', authMiddleware, async (req, res) => { 
+  try { 
+    const transactions = await Transaction.find() 
+    .populate('user', 'userFirstName userLastName accountNumber') 
+    .populate('userToSendTo', 'accountNumber'); 
+    console.log(transactions); // Log the transactions to check if user details are included 
+    res.json(transactions); 
+  } catch (error) { 
+    console.error('Error fetching transactions:', error); 
+    res.status(500).json({ error: 'Failed to fetch transactions' }); 
+  } 
 });
 
 // Endpoint to submit transaction to SWIFT 
