@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import User from '../models/user.js';
+import User from '../models/User.js'; // Use relative path
 import expressBrute from 'express-brute';
 import bruteforce from '../middleware/bruteForce.js';
 import { body, validationResult } from 'express-validator';

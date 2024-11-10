@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     userLastName: { type: String, required: true },
     password: { type: String, required: true },
     idNumber: { type: String, required: true },
-    accountNumber: { type: String, required: true },
+    accountNumber: { type: String, required: true, unique: true },
     isEmployee: { type: Boolean, default: false },  // Employee flag
 });
 

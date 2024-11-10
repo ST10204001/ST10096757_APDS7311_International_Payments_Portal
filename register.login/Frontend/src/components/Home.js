@@ -117,8 +117,8 @@ const Home = () => {
           </button>
         )}
         {userRole === 'employee' && (
-          <button className="btn btn-primary" onClick={() => navigate("/pending-transaction")}>
-            Pending Transactions
+          <button className="btn btn-primary" onClick={() => navigate("/pending-transactions-list")}>
+            Pending Transactions List
           </button>
         )}
       </div>
