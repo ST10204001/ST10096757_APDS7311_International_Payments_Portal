@@ -1,12 +1,9 @@
 /* src/styles/Home.css */
 
 html, body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #ffffff; 
-    height: fit-content;
-    width: fit-content;
+ 
+    height: 100%;
+    width: 100%;
 }
 
 .home-container {
@@ -35,11 +32,12 @@ html, body {
     padding: 15px 30px;
     background-color: #2b6777;
     color: #fff;
-    font-size: 1.2rem;
+    font-size: 12rem;
 }
 
 .home-top-header .header-left h2 {
     margin: 0;
+    font-size: 20rem;
 }
 
 .home-top-header .header-right {
@@ -55,7 +53,7 @@ html, body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .account-summary  {

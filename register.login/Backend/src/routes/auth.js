@@ -108,4 +108,18 @@ router.post('/login', [
     }
 });
 
+// Endpoint to get the current logged-in user's data
+router.get('/current-user', async (req, res) => {
+    if (req.session.user) {
+        return res.status(200).json({
+            username: req.session.user.username,
+            firstName: req.session.user.firstName,
+            lastName: req.session.user.lastName,
+            isEmployee: req.session.user.isEmployee,
+        });
+    } else {
+        return res.status(401).json({ error: 'Not logged in' });
+    }
+});
+
 export default router;
