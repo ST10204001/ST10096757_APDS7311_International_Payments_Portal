@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import moment from 'moment';                    //for the date 
 
 const PendingTransactionList = () => {
     const [transactions, setTransactions] = useState([]);
@@ -33,7 +34,7 @@ const PendingTransactionList = () => {
                             <p><strong>Amount:</strong> ${transaction.amount}</p>
                             <p><strong>Currency:</strong> {transaction.currency}</p>
                             <p><strong>Payment Provider:</strong> {transaction.provider}</p>
-                            <p><strong>Date:</strong> {transaction.date}</p>
+                            <p><strong>Date:</strong> {moment(transaction.createdAt).format('YYYY-MM-DD HH:mm')}</p> 
                             <hr />
                         </div>
                     ))

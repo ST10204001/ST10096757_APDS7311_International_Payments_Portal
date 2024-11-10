@@ -8,7 +8,7 @@ const router = express.Router();
 // Protect the /transaction route with authentication middleware
 // src/routes/transaction.js
 router.post('/transaction', authMiddleware, async (req, res) => {
-  const { userToSendTo, userAccount, amount, currency, provider } = req.body;
+  const { userToSendTo, userAccount, amount, currency, provider} = req.body;
 
   try {
     const userId = req.session.user.id;  // Get the logged-in user ID from session
@@ -32,7 +32,7 @@ router.post('/transaction', authMiddleware, async (req, res) => {
       amount,
       currency,
       provider,
-      status: 'pending',
+     // status: 'pending',
     });
 
     await transaction.save();
@@ -56,28 +56,16 @@ router.get('/transactions', authMiddleware, async (req, res) => {
       }
 });
 
-// Endpoint to approve a transaction
-router.post('/transactions/approve/:id', authMiddleware, async (req, res) => {
-  try {
-    const transactionId = req.params.id;
-    await Transaction.findByIdAndUpdate(transactionId, { status: 'approved' });
-    res.json({ message: 'Transaction approved!' });
-  } catch (error) {
-    console.error('Error approving transaction:', error);
-    res.status(500).json({ error: 'Failed to approve transaction' });
-  }
-});
-
-// Endpoint to deny a transaction
-router.post('/transactions/deny/:id', authMiddleware, async (req, res) => {
-  try {
-    const transactionId = req.params.id;
-    await Transaction.findByIdAndUpdate(transactionId, { status: 'denied' });
-    res.json({ message: 'Transaction denied!' });
-  } catch (error) {
-    console.error('Error denying transaction:', error);
-    res.status(500).json({ error: 'Failed to deny transaction' });
-  }
+// Endpoint to submit transaction to SWIFT 
+router.post('/transactions/submit/:id', authMiddleware, async (req, res) => { 
+  try { 
+    const transactionId = req.params.id; 
+    // Implement submission logic here (e.g., update database, send to SWIFT API, etc.) 
+    res.json({ message: 'Transaction submitted to SWIFT!' }); 
+  } catch (error) { 
+    console.error('Error submitting transaction:', error); 
+    res.status(500).json({ error: 'Failed to submit transaction to SWIFT' }); 
+  } 
 });
 
 
