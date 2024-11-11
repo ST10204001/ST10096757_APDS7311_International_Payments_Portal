@@ -74,7 +74,7 @@ jobs:
             echo "SSL certificate or key missing" && exit 1
           fi
 
-      # Step 10: Start the backend server
+      # Step 10: Start the server
       - name: Start server
         run: |
           cd register.login/Backend
@@ -84,14 +84,14 @@ jobs:
       # Step 11: Check HTTPS redirection
       - name: Check HTTPS redirection
         run: |
-          if ! curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 | grep -q "301"; then
+          if ! curl -s -o /dev/null -w "%{http_code}" https://localhost:5000 | grep -q "301"; then
             echo "HTTPS redirection not enforced" && exit 1
           fi
 
       # Step 12: Run server integration check
       - name: Run server check
         run: |
-          curl -f http://localhost:3000 || exit 1
+          curl -f https://localhost:5000 || exit 1
 
       # Step 13: Check for protection against additional attacks
       - name: Security Attack Checks
