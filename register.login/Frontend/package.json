@@ -10,6 +10,7 @@
     "bootstrap": "^5.3.3",
     "caniuse-lite": "^1.0.30001679",
     "https": "^1.0.0",
+    "moment": "^2.30.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",
@@ -20,7 +21,8 @@
     "start": "cross-env HTTPS=true PORT=5001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "remove-flow": "npm uninstall flow-bin"
   },
   "eslintConfig": {
     "extends": [
