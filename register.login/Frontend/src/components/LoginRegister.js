@@ -156,13 +156,9 @@ const LoginRegister = () => {
             const responseData = await response.json();
             console.log('Login response data:', responseData);
     
-            // Check if login is successful based on the message or status
-            if (responseData.message === "User login successful") {
-                setUser({ username: loginData.username });  // Use username from loginData
-                navigate('/home', { state: { isEmployee } });
-            } else {
-                setError("Login failed: User data is missing from the response.");
-            }
+            setUser(responseData.user);
+            navigate('/home', { state: { isEmployee } });
+            console.log('Login response data:', responseData);
         } catch (err) {
             console.error('Login error:', err);
             setError(err.message || 'Something went wrong');
