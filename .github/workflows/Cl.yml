@@ -71,36 +71,41 @@ jobs:
           sleep 5  # Ensure we wait a bit before checking again
           curl --max-time 30 --silent --fail https://localhost:5000 || echo "Server is not responding on port 5000"
 
-      # Step 9: Check for protection against additional attacks
+            # Step 9: Check for protection against additional attacks
       - name: Security Attack Checks
         run: |
           cd register.login/Backend
           
-          # Skip the Clickjacking protection check (Commented out)
-          # if ! grep -q "frameguard" src/App.js; then
-          #   echo "Clickjacking protection missing (Helmet's frameguard)" && exit 1
-          # fi
+          # Check for Clickjacking Protection (helmet.js)
+          if ! grep -q "frameguard" src/config/helmet.js; then
+            echo "Clickjacking protection missing (Helmet's frameguard)" && exit 1
+          fi
 
-          # Check for Session Jacking Protection
-          if ! grep -q "cookieSession" src/App.js; then
+          # Check for Session Jacking Protection (session.js)
+          if ! grep -q "cookieSession" src/config/session.js; then
             echo "Session hijacking protection missing (cookie-session middleware)" && exit 1
           fi
-          # Check for SQL Injection Prevention
-          if ! grep -q "findOne(" src/App.js; then
+
+          # Check for SQL Injection Prevention (auth.js)
+          if ! grep -q "findOne(" src/routes/auth.js; then
             echo "SQL Injection protection missing (use Mongoose methods like findOne)" && exit 1
           fi
-          # Check for Cross-Site Scripting (XSS) Protection
-          if ! grep -q "xss-clean" src/App.js; then
+
+          # Check for Cross-Site Scripting (XSS) Protection (xssProtection.js)
+          if ! grep -q "xss-clean" src/middleware/xssProtection.js; then
             echo "XSS protection missing (xss-clean middleware)" && exit 1
           fi
-          # Check for Man-in-the-Middle Attack Protection
-          if ! grep -q "Strict-Transport-Security" src/App.js; then
+
+          # Check for Man-in-the-Middle Attack Protection (hsts.js)
+          if ! grep -q "Strict-Transport-Security" src/config/hsts.js; then
             echo "HSTS header missing (use Helmet to enforce Strict-Transport-Security)" && exit 1
           fi
-          # DDoS Protection (Rate Limiting and Network Throttling)
-          if ! grep -q "express-rate-limit" src/App.js; then
+
+          # DDoS Protection (Rate Limiting and Network Throttling) (rateLimit.js)
+          if ! grep -q "express-rate-limit" src/config/rateLimit.js; then
             echo "DDoS protection missing (express-rate-limit middleware)" && exit 1
           fi
+
 
       # Step 10: Upload results 
       - name: Upload test results
