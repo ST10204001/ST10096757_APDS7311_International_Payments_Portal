@@ -117,7 +117,8 @@ const Home = () => {
           </button>
         )}
       {/* Button to navigate to transaction page */} 
-      <button className="btn btn-secondary" onClick={handleTransaction}> Create New Transaction </button>
+      {userRole === 'user' && (
+      <button className="btn btn-secondary" onClick={handleTransaction}> Create New Transaction </button>)}
       </div> 
     </div>
   ); };
