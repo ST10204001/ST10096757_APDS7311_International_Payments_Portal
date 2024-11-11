@@ -51,6 +51,8 @@ const PendingTransaction = () => {
                             <p><strong>Amount:</strong> ${transaction.amount}</p>
                             <p><strong>Currency:</strong> {transaction.currency}</p>
                             <p><strong>Payment Provider:</strong> {transaction.provider}</p>
+                            <p><strong>Sender Account:</strong> {transaction.userAccount}</p> {/* Display sender's account number */} 
+                            <p><strong>Recipient:</strong> {transaction.userToSendTo}</p> {/* Display recipient's name */}
                             <p><strong>Date:</strong> {moment(transaction.createdAt).format('YYYY-MM-DD HH:mm')}</p> 
                             <p><strong>SWIFT Code:</strong> {transaction.swiftCode}</p>
                             <button onClick={verifySwiftCode} className="btn btn-info">Verify SWIFT Code</button>
