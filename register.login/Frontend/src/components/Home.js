@@ -110,12 +110,7 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Conditional Rendering of Buttons Based on User Role */}
-        {userRole === 'user' && (
-          <button className="btn btn-primary" onClick={() => navigate("/approved-transaction")}>
-            Approved Transactions
-          </button>
-        )}
+        {/* Approve user transactions*/}
         {userRole === 'employee' && (
           <button className="btn btn-primary" onClick={() => navigate("/pending-transactions-list")}>
             Pending Transactions List

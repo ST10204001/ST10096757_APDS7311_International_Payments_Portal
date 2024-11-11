@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 import './styles/Transaction.css';
 
 const Transaction = () => {
-  const [recipientName, setRecipientName] = useState('');
+  const [userToSendTo, setUserToSendTo] = useState('');
   const [userAccount, setUserAccount] = useState('');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('');
@@ -15,7 +15,7 @@ const Transaction = () => {
     e.preventDefault();
 
     const transactionData = {
-      recipientName,
+      userToSendTo,
       userAccount,
       amount,
       currency,
@@ -39,7 +39,7 @@ const Transaction = () => {
         const data = await response.json();
         if (response.ok) {
           alert('Transaction successful!');
-          setRecipientName('');
+          setUserToSendTo('');
           setUserAccount('');
           setAmount('');
           setCurrency('');
@@ -73,8 +73,8 @@ const Transaction = () => {
                 type="text"
                 className="form-control"
                 placeholder="Recipient name"
-                value={recipientName}
-                onChange={(e) => setRecipientName(e.target.value)}
+                value={userToSendTo}
+                onChange={(e) => setUserToSendTo(e.target.value)}
                 required
               />
             </div>
