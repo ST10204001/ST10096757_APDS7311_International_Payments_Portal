@@ -35,6 +35,6 @@ jobs:
           projectBaseDir: .  # Define the base directory for your project
           args: |
             -Dsonar.projectKey=ST10096757_APDS7311_International_Payments_Portal
-            -Dsonar.organization=st10204001  # Change this if the organization is actually st10204001
+            -Dsonar.organization=st10204001
         env:
           SONAR_TOKEN: 6357971180c41865f5f19b083e030b5636059f8b  # SonarCloud token
