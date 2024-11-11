@@ -1,61 +1,63 @@
-// src/components/Transaction.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
 import './styles/Transaction.css';
 
 const Transaction = () => {
-  const [userToSendTo, setUserToSendTo] = useState('');
+  const [recipientName, setRecipientName] = useState('');
   const [userAccount, setUserAccount] = useState('');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('');
   const [provider, setProvider] = useState('');
+  const [swiftCode, setSwiftCode] = useState(''); // New state for SWIFT code
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const transactionData = {
-      userToSendTo,
+      recipientName,
       userAccount,
       amount,
       currency,
       provider,
-  };
+      swiftCode: provider === 'SWIFT' ? swiftCode : null, // Include SWIFT code only if provider is SWIFT
+    };
   
-  try {
-    const response = await fetch('/api/transaction', {
-      method: 'POST',
-      headers: {
+    try {
+      const response = await fetch('/api/transaction', {
+        method: 'POST',
+        headers: {
           'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(transactionData),
-      credentials: 'include',
-  });
+        },
+        body: JSON.stringify(transactionData),
+        credentials: 'include',
+      });
   
       // Check if response is JSON
       const contentType = response.headers.get('Content-Type');
       if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          if (response.ok) {
-              alert('Transaction successful!');
-              setUserToSendTo('');
-              setUserAccount('');
-              setAmount('');
-              setCurrency('');
-              setProvider('');
-          } else {
-              alert(`Transaction failed: ${data.error || 'Please try again.'}`);
-          }
+        const data = await response.json();
+        if (response.ok) {
+          alert('Transaction successful!');
+          setRecipientName('');
+          setUserAccount('');
+          setAmount('');
+          setCurrency('');
+          setProvider('');
+          setSwiftCode('');
+        } else {
+          alert(`Transaction failed: ${data.error || 'Please try again.'}`);
+        }
       } else {
-          // Handle non-JSON response
-          const text = await response.text();
-          console.error('Received non-JSON response:', text);
-          alert('Transaction failed due to server error. Please try again.');
+        // Handle non-JSON response
+        const text = await response.text();
+        console.error('Received non-JSON response:', text);
+        alert('Transaction failed due to server error. Please try again.');
       }
-  } catch (error) {
+    } catch (error) {
       alert('Transaction failed. Please try again.');
       console.error('Transaction error:', error);
-  }
+    }
   };
 
   return (
@@ -66,13 +68,13 @@ const Transaction = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-row">
             <div className="form-group">
-              <label>User to Send To:</label>
+              <label>Recipient Name:</label>
               <input
                 type="text"
                 className="form-control"
-                placeholder="Recipient username"
-                value={userToSendTo}
-                onChange={(e) => setUserToSendTo(e.target.value)}
+                placeholder="Recipient name"
+                value={recipientName}
+                onChange={(e) => setRecipientName(e.target.value)}
                 required
               />
             </div>
@@ -136,8 +138,22 @@ const Transaction = () => {
             </select>
           </div>
 
+          {provider === 'SWIFT' && (
+            <div className="form-group">
+              <label>SWIFT Code:</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter SWIFT code"
+                value={swiftCode}
+                onChange={(e) => setSwiftCode(e.target.value)}
+                required
+              />
+            </div>
+          )}
+
           <button type="submit" className="btn btn-primary">
-            Submit Transaction
+            Pay Now
           </button>
         </form>
       </div>
