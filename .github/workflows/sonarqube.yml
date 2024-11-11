@@ -21,6 +21,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
+          distribution: 'adoptopenjdk'  # Use AdoptOpenJDK as the distribution
 
       - name: Cache SonarQube dependencies
         uses: actions/cache@v2
