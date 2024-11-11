@@ -116,9 +116,10 @@ const Home = () => {
             Pending Transactions List
           </button>
         )}
-      </div>
+      {/* Button to navigate to transaction page */} 
+      {userRole === 'user' && (
+      <button className="btn btn-secondary" onClick={handleTransaction}> Create New Transaction </button>)}
+      </div> 
     </div>
-  );
-};
-
+  ); };
 export default Home;

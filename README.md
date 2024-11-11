@@ -5,132 +5,234 @@ Monique Jackson– ST10096757
 Imrah Lodewyk – ST10204001
 Malerato Seboni – ST10112350
 Salih Adams – ST10202241 
- 
-	-- PROJECT OVERVIEW --
-The International Payment System (IPS) is designed for a bank's online banking site, allowing customers to make secure international payments. The system provides a dedicated payments portal accessible only by pre-registered bank employees. Customers can register, log in, and execute transactions, while employees can verify and submit these transactions to SWIFT.
 
-However for this part of the POE, the requirements for the app is to allow customers to register and login into the website.
-
-	-- YouTube Link --
+ 	-- YouTube Link --
  https://youtu.be/ogxKLvq_At0
-
-	-- FEATURES --
-- Customer Registration: Users can register by providing their full name, ID number, account number, and password.
-- User Authentication: Customers can log in using their username, account number, and password.
-
-	-- TECHNOLOGIES USED --
-- Frontend:    React.js 
-- Backend:     Node.js, Express.js
-- Database:    MongoDB
-- Security:    Bcrypt for password hashing, Helmet for security headers, and other security libraries
-- API Testing: Postman
-- SSL/TLS:     Self-signed certificates for secure communication
-
-
-		-- INSTALLATION --
-	-- PREREQUISITES --
-- Node.js (v12 or higher)
-- MongoDB (local or Atlas)
-- npm 
-
-	-- CLONE THE REPOSITORY --
-Clone the repository from the GitHub link: https://github.com/ST10204001/ST10096757_APDS7311_International_Payments_Portal.git
  
-	-- BACKEND SETUP --
-1.Download the editor of your choice. The instructions following are for Visual Studio Code. Ensure you follow the equivalent 	steps should you choose another editor.
-2.Navigate to the backend directory by typing “cd” followed by the directory leading to the “api_backend” file.
-3.Install dependencies, namely nodemon, which can be run as “npm install” in the command prompt terminal or the equivalent command
-4.Start the backend by running “node App.js” in the terminal
+	-- PROJECT OVERVIEW --
+APDS Payment System
 
-	-- FRONTEND SETUP --
-1.Open Windows PowerShell
-2.Navigate to the backend directory by typing “cd” followed by the directory leading to the “login-register-with-node” file.
-3.Install dependencies, namely nodemon, which can be run as “npm install” in the command prompt terminal or the equivalent command.
-4.Install Bootstrap dependencies by typing “npm install bootstrap”.
-5.Start the React application by running “npm start”.
-6.In the event that the PowerShell terminal states that something else is running on port 3001 and asks if you would like to run on another port, type “y” and press enter.
-7.Ensure that the web page opens on firefox.
+Welcome to the APDS Payment System! This application is designed to provide secure and efficient payment transactions for both clients and employees. It uses the MERN stack (MongoDB, Express, React, and Node.js) and includes a variety of security features to ensure that sensitive data is protected.
 
-	-- USAGE --
-1.Open your FireFox Web Browser and navigate to http://localhost:3001 for the frontend interface.
-2.Follow the prompts to register or log in as a customer.
-3.Once logged in, customers can enter payment details and submit transactions.
-4.Employees can log in to the payment portal to verify and submit payments to SWIFT.
+## Table of Contents
 
-		-- API DOCUMENTATION --
-	-- BASE URL --
-Development: http://localhost:3001/api
+1. [Overview](#overview)
+2. [Setup Instructions](#setup-instructions)
+3. [Application Walkthrough](#application-walkthrough)
+4. [Backend Walkthrough](#backend-walkthrough)
+5. [Security Measures](#security-measures)
+6. [API Testing with Postman](#api-testing-with-postman)
+7. [MongoDB](#mongodb)
+8. [Testing Integration](#testing-integration)
+9. [Contributors](#contributors)
+
+## Overview
+
+For our APDS POE assignment, we were tasked with creating a payment system that employs robust security measures. The application is built using the MERN stack, which includes:
+
+- **MongoDB** for the database
+- **Express.js** for the backend API
+- **React** for the frontend UI
+- **Node.js** for running the server
+
+This project focuses on secure transactions and user management, ensuring that both client and employee data is handled carefully.
+
+## Setup Instructions
+
+### Prerequisites
+
+Before you start, make sure you have the following installed:
+
+- **Node.js**: You can download it from [here](https://nodejs.org/).
+- **Git**: To clone the repository.
+
+### Cloning the Repository
+
+1. Clone the repository by running the following command:
+
+2. Navigate to the cloned repository folder.
+
+### Backend Setup
+
+1. Open a terminal and navigate to the backend directory (where `server.js` is located).
+2. Install the backend dependencies:
+
+   ```bash
+   npm install
+   ```
+
+   This will install the necessary packages, including:
+   - `express`
+   - `mongoose`
+   - `express-session`
+   - `bcryptjs`
+   - `express-validator`
+   - `express-brute`
+   - `helmet`
+   - `cors`
+
+3. If you're working in a real project environment, you would need to set up environment variables (`.env`) to store sensitive data like the MongoDB connection URI and session secrets. However, for testing purposes, these values are stored openly in the `README`.
+
+4. Start the server:
+
+   ```bash
+   node server.js
+   ```
+
+   The backend will be accessible at `http://localhost:5000`.
+
+### Frontend Setup
+
+1. Navigate to the frontend directory.
+2. Install the frontend dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Start the frontend application:
+
+   ```bash
+   npm start
+   ```
+
+   The frontend will be accessible at `http://localhost:5001`.
+
+   If using Firefox, you'll need to click **Advanced** and select **Trust the Link** to bypass the initial security warning.
+
+## Application Walkthrough
+
+### Registration & Login
+
+- **Registration**: Clients can register with their username, password, first name, last name, ID number, and account number.
+- **Login**: Both clients and employees can log in. Clients use their username, password, and account number, while employees only need their username and password.
+
+### Client Dashboard
+
+Once logged in, clients can:
+- View their account details.
+- Create a transaction by filling out:
+  - Recipient name
+  - Amount to transfer
+  - Currency type
+  - Transaction method (SWIFT requires a SWIFT code)
+
+### Employee Dashboard
+
+Employees can:
+- View a list of transactions that need approval.
+- Verify the transaction details (including SWIFT codes).
+- Approve and send the transactions.
+
+Both clients and employees can log out from the application.
+
+## Backend Walkthrough
+
+### API Design
+
+The backend relies on API endpoints to handle user registration, login, and transaction creation. It uses session management for user authentication, with cookies storing user data securely.
+
+- **Registration** (`POST /api/register`): Registers a new user (client or employee).
+- **Login** (`POST /api/login`): Authenticates a user based on credentials.
+- **Create Transaction** (`POST /api/transaction`): Allows clients to create a transaction by verifying their session.
+
+The backend uses validation and hashing for secure user authentication and transaction management.
+
+### Code Example for Register API
+
+```js
+// Example of registering a user
+app.post('/api/register', (req, res) => {
+  // Validate input, hash password, and save user to database
+});
+```
+
+### Code Example for Transaction Creation
+
+```js
+// Example of creating a transaction
+app.post('/api/transaction', (req, res) => {
+  // Verify user session and save transaction to database
+});
+```
+
+## Security Measures
+
+We’ve implemented several security measures to protect sensitive data:
+
+1. **Password Hashing**: We use `bcrypt` to hash user passwords before storing them in the database. This ensures that even if the database is compromised, passwords remain secure.
+2. **CORS**: Configured to only allow requests from trusted origins to prevent unauthorized access.
+3. **Helmet**: Sets HTTP security headers to prevent common vulnerabilities like XSS, Clickjacking, and more.
+4. **SSL Encryption**: All communication is encrypted using SSL certificates to ensure secure data transmission over HTTPS.
+5. **Rate Limiting**: We use `express-rate-limit` to limit the number of requests an IP can make to prevent DoS attacks.
+6. **Brute Force Protection**: Using `express-brute`, we limit the number of failed login attempts to prevent brute-force attacks.
+7. **Input Validation**: All user inputs are validated to prevent malicious data from being processed.
+
+### Session Management
+
+User sessions are managed via secure cookies (`userToken`) with the following attributes:
+- `HttpOnly`: Prevents access by JavaScript.
+- `Secure`: Ensures cookies are only sent over HTTPS.
+- `SameSite`: Restricts how cookies are sent with cross-origin requests.
+
+## API Testing with Postman
+
+### Step 1: Test Registration API
+
+1. Open Postman and send a **POST** request to `http://localhost:5000/api/register`.
+2. Set the request body as JSON with user registration details:
+
+   ```json
+   {
+     "username": "newUser123",
+     "password": "password123",
+     "userFirstName": "John",
+     "userLastName": "Doe",
+     "idNumber": "1234567890123",
+     "accountNumber": "1234567890"
+   }
+   ```
+
+3. Hit **Send**. If successful, you’ll get a response:
+
+   ```json
+   {
+     "message": "User registered successfully"
+   }
+   ```
+
+### Step 2: Test Login API
+
+1. Send a **POST** request to `http://localhost:5000/api/login` with login credentials.
+2. If successful, you’ll get a session cookie that can be used in future requests.
+
+### Step 3: Test Transaction API
+
+1. Send a **POST** request to `http://localhost:5000/api/transaction` with transaction details.
+
+   ```json
+   {
+     "amount": 500,
+     "recipientAccount": "9876543210",
+     "senderAccount": "1234567890",
+     "transactionType": "transfer"
+   }
+   ```
+
+2. Include the session cookie in the headers for authentication.
+
+## MongoDB
+
+The application uses MongoDB as the database, with two collections:
+- `users`: Stores user data (clients and employees).
+- `transactions`: Stores transaction details.
+
+## Testing Integration
+
+We integrated SonarQube (via SonarCloud) into our CircleCI pipeline to automatically scan the code for potential issues, including security vulnerabilities and code smells. SonarCloud provides real-time feedback on our code quality and security.
 
 
-API ENDPOINTS FOR THE INTERNATIONAL PAYMENT SYSTEM
-
-1. USER REGISTRATION
-
-Endpoint: POST /api/register
-Register a new user by providing their details.
-	o The username can consist of alphanumeric characters and underscores.
-	o The first name can contain alphabetic characters and spaces.
-	o The last name can contain alphabetic characters and spaces.
-	o The password must be at least 8 characters long, include at least one letter and one number, and may include special characters. 
-	o The ID must be exactly 13 numeric digits.
-	o The account number must be between 8 and 12 numeric digits.
-Response:
-201 Created: User successfully registered.
-400 Bad Request: Validation error or user already exists.
-
-2. USER LOGIN
-
-Endpoint: POST /api/login
-Description: Log in a registered user using their credentials.
-Request Body: 
-{
-	o The username must match a stored username that will consist of alphanumeric characters and underscores.
-	o The password must match the stored password of that username which should be at least 8 characters long, include at least one letter and one number, and may include special characters. 
-	o The account number must match the account number stored under that username that is between 8 and 12 numeric digits.
-}
-Response:
-200 OK: Successfully logged in, with session token.
-401 Unauthorized: Invalid credentials.
-
-
-		-- SECURITY MEASURES --
-SECURITY MEASURES
-To safeguard sensitive information and protect against common web vulnerabilities, the following security measures have been implemented in the International Payment System:
-
-1. Password Hashing and Salting: User passwords are hashed and salted using Bcrypt before being stored in the database, making 	them unreadable even if accessed. The Bcrypt library is used for securely hashing passwords before storing them in the 	database. Bcrypt incorporates a work factor (cost factor) that makes the hashing process slower, thereby increasing 	resistance to brute-force attacks. When a user registers, the password is hashed using Bcrypt. During login, the hashed 	password is compared with the stored hash.
-
-2. CORS: Cross-Origin Resource Sharing (CORS): CORS is configured to restrict which domains can access the API, thus minimizing 	the risk of CSRF (Cross-Site Request Forgery) attacks.
-
-3. Helmet: This middleware helps secure applications by setting various HTTP headers. It’s designed to mitigate common security 	vulnerabilities.
-Headers Implemented:
-		o Content Security Policy (CSP): Helps prevent Cross-Site Scripting (XSS) attacks by controlling which 			resources the browser is allowed to load.
-		o X-Content-Type-Options: Prevents browsers from MIME-sniffing a response away from the declared content type.
-		o X-Frame-Options: Protects against clickjacking by controlling whether the browser should allow the site to be framed.
-		o Strict-Transport-Security: Enforces secure (HTTP over SSL/TLS) connections to the server.
-
-4. Rate Limiting: This practice helps to protect against brute-force attacks and denial-of-service (DoS) attacks by limiting the number of requests from a single IP address over a specified time frame.
-
-5. Input Validation and Sanitisation: All user inputs are validated using regex patterns to ensure they meet expected formats, preventing SQL injection and XSS attacks.
-
-6. Session Management: Secure cookie attributes are set to enhance session management. This includes:
-	o HttpOnly: Prevents client-side scripts from accessing the cookie.
-	o Secure: Ensures cookies are sent over HTTPS only.
-	o SameSite: Controls how cookies are sent with cross-origin requests.
-
-
-	-- PROTECTION AGAINST ATTACKS --
-To further secure the application, the following measures have been taken:
-•	Input Validation: All inputs are validated against expected patterns to prevent injections.
-•	Brute Force Protection: Rate limiting is applied to login attempts to mitigate brute force attacks.
-•	XSS Protection: Helmet and other libraries are used to set headers that mitigate cross-site scripting attacks.
-•	SQL Injection Protection: As a NoSQL database is used, care is taken to validate inputs before processing them.
-
-	-- WHITELIST INPUT VALIDATION --
-All user input is validated against regular expressions (RegEx) to prevent injection attacks and ensure that only acceptable formats are accepted.
-SSL CONFIGURATION
-All communication between the client and server is encrypted using SSL/TLS. This is enforced by:
-•	Redirecting all HTTP traffic to HTTPS.
-•	Configuring the server to use a valid SSL certificate (e.g., from Let's Encrypt).
+Thank you for reviewing our APDS project.
 
 
 LICENSE

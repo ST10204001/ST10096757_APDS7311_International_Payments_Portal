@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <Link to="/home" className="nav-link">Home</Link>
-      <Link to="/transaction" className="nav-link">Make a Transaction</Link>
+      {/* <Link to="/transaction" className="nav-link">Make a Transaction</Link> */}
       <Link to="/" className="nav-link">Logout</Link>
     </nav>
   );

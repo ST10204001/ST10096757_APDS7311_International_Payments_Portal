@@ -22,6 +22,13 @@ jobs:
               -Dsonar.organization=st10204001 \
               -Dsonar.login=$SONAR_TOKEN \
               -Dsonar.branch.name=main
+      - run:
+          name: Run SonarQube Scan for Backend
+          command: |
+            sonar-scanner -Dsonar.projectKey=ST10204001_ST10096757_APDS7311_International_Payments_Portal \
+              -Dsonar.organization=st10204001 \
+              -Dsonar.login=$SONAR_TOKEN \
+              -Dsonar.branch.name=main
 
   backend:
     executor: docker-executor
