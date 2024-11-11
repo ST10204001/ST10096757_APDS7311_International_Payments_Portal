@@ -35,6 +35,6 @@ jobs:
             -Dsonar.organization=st10204001
             -Dsonar.login=$6357971180c41865f5f19b083e030b5636059f8b
             -Dsonar.branch.name=main
-            -Dsonar.sources=register.login/Backend  # Specify your backend source directory
+            -Dsonar.sources=register.login/Backend
         env:
           SONAR_TOKEN: 6357971180c41865f5f19b083e030b5636059f8b
