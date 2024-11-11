@@ -36,6 +36,10 @@ const PendingTransactionList = () => {
                             <p><strong>Amount:</strong> ${transaction.amount}</p>
                             <p><strong>Currency:</strong> {transaction.currency}</p>
                             <p><strong>Payment Provider:</strong> {transaction.provider}</p>
+                              {/* Conditionally render SWIFT Code if provider is SWIFT */}
+                              {transaction.provider === "SWIFT" && (
+                                <p><strong>SWIFT Code:</strong> {transaction.swiftCode}</p>
+                            )}
                             <p><strong>Date:</strong> {moment(transaction.createdAt).format('YYYY-MM-DD HH:mm')}</p> 
                             <hr />
                         </div>

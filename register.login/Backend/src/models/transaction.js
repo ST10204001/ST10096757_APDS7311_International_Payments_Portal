@@ -8,6 +8,7 @@ const transactionSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
   currency: { type: String, required: true },
   provider: { type: String, required: true },
+  swiftCode: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
 });
 
