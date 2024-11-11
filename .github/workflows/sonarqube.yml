@@ -17,11 +17,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17 (Adoptium)
+      - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'temurin'  # Use Adoptium (previously AdoptOpenJDK)
+          distribution: 'temurin'  # Use 'temurin' for the latest JDK 17 distribution
 
       - name: Cache SonarQube dependencies
         uses: actions/cache@v2
@@ -29,9 +29,11 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar-${{ hashFiles('**/sonar-project.properties') }}
 
-      - name: SonarQube Scan
-        uses: sonarsource/sonarcloud-github-action@master
+      - name: Run SonarQube analysis
+        uses: sonarsource/sonarcloud-github-action@v2
         with:
-          organization: ${{ secrets.SONAR_ORG }}
-          projectKey: ${{ secrets.SONAR_PROJECT_KEY }}
-          token: ${{ secrets.SONAR_TOKEN }}
+          projectBaseDir: .  # Define the base directory for your project
+        env:
+          SONAR_TOKEN: 6357971180c41865f5f19b083e030b5636059f8b  # SonarCloud token
+          SONAR_ORG: Imrah  # Your SonarCloud organization
+          SONAR_PROJECT_KEY: ST10096757_APDS7311_International_Payments_Portal  # Your SonarCloud project key
