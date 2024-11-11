@@ -58,6 +58,7 @@ const PendingTransaction = () => {
                             <button onClick={verifySwiftCode} className="btn btn-info">Verify SWIFT Code</button>
                             <br />
                             <button onClick={submitToSwift} className="btn btn-success" disabled={!isVerified}>Submit to SWIFT</button>
+                            <button onClick={() => navigate('/home')} className="btn btn-primary" aria-label="Return to Home">Return to Home</button>
                         </>
                     ) : (
                         <div>

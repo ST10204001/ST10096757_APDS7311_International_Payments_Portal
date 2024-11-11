@@ -39,6 +39,7 @@ const PendingTransactionList = () => {
                                 <p><strong>SWIFT Code:</strong> {transaction.swiftCode}</p>
                             )}
                             <p><strong>Date:</strong> {moment(transaction.createdAt).format('YYYY-MM-DD HH:mm')}</p> 
+                            <button onClick={() => navigate('/home')} className="btn btn-primary" aria-label="Return to Home">Return to Home</button>
                             <hr />
                         </div>
                     ))
