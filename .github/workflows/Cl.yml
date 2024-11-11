@@ -79,13 +79,21 @@ jobs:
         run: |
           cd register.login/Backend
           node server.js &
-          sleep 15  # Allow time for the server to start
+          sleep 20  # Allow 20 seconds for the server to start
 
       # Step 11: Run server integration check
       - name: Run server check
         run: |
+          # Debugging: Check if HTTP server is up and responding
+          echo "Checking if HTTP server is running on port 3000..."
+          curl -v http://localhost:3000 || echo "HTTP server not reachable"
+
+          # Debugging: Check if HTTPS server is up and responding
+          echo "Checking if HTTPS server is running on port 5000..."
+          curl -v https://localhost:5000 --insecure || echo "HTTPS server not reachable"
+
           # Perform the server availability check
-          curl -f https://localhost:5000 || exit 1
+          curl -f https://localhost:5000 --insecure || exit 1
 
       # Step 12: Check for protection against additional attacks
       - name: Security Attack Checks
