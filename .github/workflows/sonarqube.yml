@@ -35,5 +35,5 @@ jobs:
           projectBaseDir: .  # Define the base directory for your project
         env:
           SONAR_TOKEN: 6357971180c41865f5f19b083e030b5636059f8b  # SonarCloud token
-          SONAR_ORG: ST10204001  # Your SonarCloud organization
+          SONAR_ORG: st10204001  # Your SonarCloud organization
           SONAR_PROJECT_KEY: ST10096757_APDS7311_International_Payments_Portal  # Your SonarCloud project key
