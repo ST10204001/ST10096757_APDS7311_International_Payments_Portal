@@ -65,12 +65,10 @@ router.post('/transaction', authMiddleware, async (req, res) => {
 });
 
 
-//endpoint to fetch all transactions including sender and recipient details
+//endpoint to fetch all transactions 
 router.get('/transactions', authMiddleware, async (req, res) => { 
   try { 
-    const transactions = await Transaction.find() 
-    .populate('user', 'userFirstName userLastName accountNumber') 
-    .populate('userToSendTo', 'accountNumber'); 
+    const transactions = await Transaction.find(); 
     console.log(transactions); // Log the transactions to check if user details are included 
     res.json(transactions); 
   } catch (error) { 
