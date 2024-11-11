@@ -84,7 +84,17 @@ jobs:
       # Step 11: Check HTTPS redirection
       - name: Check HTTPS redirection
         run: |
-          if ! curl -s -o /dev/null -w "%{http_code}" https://localhost:5000 | grep -q "301"; then
+          # Debugging: Check if HTTP server is up and responding
+          echo "Checking if HTTP server is running on port 3000..."
+          curl -v http://localhost:3000 || echo "HTTP server not reachable"
+
+          # Debugging: Check if HTTPS server is running on port 5000
+          echo "Checking if HTTPS server is running on port 5000..."
+          curl -v https://localhost:5000 || echo "HTTPS server not reachable"
+
+          # Perform the redirection check
+          echo "Performing HTTPS redirection check..."
+          if ! curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 | grep -q "301"; then
             echo "HTTPS redirection not enforced" && exit 1
           fi
 
