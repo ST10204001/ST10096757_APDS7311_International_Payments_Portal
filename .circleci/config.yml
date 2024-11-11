@@ -14,38 +14,35 @@ jobs:
           name: Navigate to frontend directory and Install Dependencies
           command: |
             cd register.login/Frontend
-            npm install
+            npm install  # Install frontend dependencies
       - run:
           name: Run SonarQube Scan for Frontend
           command: |
-            sonar-scanner -Dsonar.projectKey=ST10204001_ST10096757_APDS7311_International_Payments_Portal \
+            sonar-scanner \
+              -Dsonar.projectKey=ST10204001_ST10096757_APDS7311_International_Payments_Portal \
               -Dsonar.organization=st10204001 \
               -Dsonar.login=$SONAR_TOKEN \
-              -Dsonar.branch.name=main
-      - run:
-          name: Run SonarQube Scan for Backend
-          command: |
-            sonar-scanner -Dsonar.projectKey=ST10204001_ST10096757_APDS7311_International_Payments_Portal \
-              -Dsonar.organization=st10204001 \
-              -Dsonar.login=$SONAR_TOKEN \
-              -Dsonar.branch.name=main
+              -Dsonar.branch.name=main \
+              -Dsonar.sources=register.login/Frontend  # Frontend source directory
 
   backend:
     executor: docker-executor
     steps:
-      - checkout
+      - checkout  # Check out the source code
       - run:
           name: Navigate to backend directory and Install Dependencies
           command: |
             cd register.login/Backend
-            npm install
+            npm install  # Install backend dependencies
       - run:
           name: Run SonarQube Scan for Backend
           command: |
-            sonar-scanner -Dsonar.projectKey=ST10204001_ST10096757_APDS7311_International_Payments_Portal \
+            sonar-scanner \
+              -Dsonar.projectKey=ST10204001_ST10096757_APDS7311_International_Payments_Portal \
               -Dsonar.organization=st10204001 \
               -Dsonar.login=$SONAR_TOKEN \
-              -Dsonar.branch.name=main
+              -Dsonar.branch.name=main \
+              -Dsonar.sources=register.login/Backend  # Backend source directory
 
 workflows:
   version: 2
