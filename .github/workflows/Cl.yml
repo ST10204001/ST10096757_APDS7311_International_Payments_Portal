@@ -41,31 +41,20 @@ jobs:
           cd register.login/Backend
           npm install
 
-      # Step 5: Install frontend dependencies
-      - name: Install frontend dependencies
+      # Step 5: Clean npm cache and install frontend dependencies
+      - name: Clean npm cache and install frontend dependencies
         run: |
           cd register.login/Frontend
+          rm -rf node_modules package-lock.json  # Remove node_modules and package-lock.json
           npm install
 
-      # Step 6: Fix permissions for react-scripts (if needed)
-      - name: Fix permissions for react-scripts
-        run: |
-          chmod +x ./node_modules/.bin/react-scripts
-
-      # Step 7: Clean npm cache and reinstall dependencies (if needed)
-      - name: Clean npm cache and install dependencies
-        run: |
-          cd register.login/Frontend
-          rm -rf node_modules
-          npm install
-
-      # Step 8: Build React App
+      # Step 6: Build React App
       - name: Build React App
         run: |
           cd register.login/Frontend
           npm run build
 
-      # Step 9: Set SSL options for Backend
+      # Step 7: Set SSL options for Backend
       - name: Set SSL options
         run: |
           cd register.login/Backend
@@ -73,7 +62,7 @@ jobs:
           chmod 644 ./keys/server.key
           chmod 644 ./keys/server.crt
 
-      # Step 10: Check SSL configuration
+      # Step 8: Check SSL configuration
       - name: Check SSL configuration
         run: |
           cd register.login/Backend
@@ -81,26 +70,26 @@ jobs:
             echo "SSL certificate or key missing" && exit 1
           fi
 
-      # Step 11: Start the backend server
+      # Step 9: Start the backend server
       - name: Start server
         run: |
           cd register.login/Backend
           node server.js &
           sleep 15  # Allow time for the server to start
 
-      # Step 12: Check HTTPS redirection
+      # Step 10: Check HTTPS redirection
       - name: Check HTTPS redirection
         run: |
           if ! curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 | grep -q "301"; then
             echo "HTTPS redirection not enforced" && exit 1
           fi
 
-      # Step 13: Run server integration check
+      # Step 11: Run server integration check
       - name: Run server check
         run: |
           curl -f http://localhost:3000 || exit 1
 
-      # Step 14: Check for protection against additional attacks
+      # Step 12: Check for protection against additional attacks
       - name: Security Attack Checks
         run: |
           cd register.login/Backend
@@ -129,7 +118,7 @@ jobs:
             echo "DDoS protection missing (express-rate-limit middleware)" && exit 1
           fi
 
-      # Step 15: Upload results 
+      # Step 13: Upload results 
       - name: Upload test results
         if: failure()
         uses: actions/upload-artifact@v3
