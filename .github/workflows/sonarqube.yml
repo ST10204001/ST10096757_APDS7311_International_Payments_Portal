@@ -33,7 +33,7 @@ jobs:
         uses: sonarsource/sonarcloud-github-action@v2
         with:
           projectBaseDir: .  # Define the base directory for your project
-          extraArgs: |
+          args: |
             -Dsonar.projectKey=ST10096757_APDS7311_International_Payments_Portal
             -Dsonar.organization=Imrah
         env:
