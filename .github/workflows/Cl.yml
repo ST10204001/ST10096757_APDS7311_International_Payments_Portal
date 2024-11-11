@@ -47,7 +47,26 @@ jobs:
           cd register.login/Frontend
           npm install
 
-      # Step 6: Set SSL options
+      # Step 6: Clean and reinstall frontend dependencies if necessary
+      - name: Clean and reinstall frontend dependencies
+        run: |
+          cd register.login/Frontend
+          rm -rf node_modules package-lock.json  # Clean up old modules and lock file
+          npm install  # Reinstall fresh dependencies
+
+      # Step 7: Ensure react-scripts has execute permissions
+      - name: Ensure react-scripts has execute permissions
+        run: |
+          cd register.login/Frontend
+          chmod +x ./node_modules/.bin/react-scripts  # Ensure react-scripts is executable
+
+      # Step 8: Build React App
+      - name: Build React App
+        run: |
+          cd register.login/Frontend
+          npm run build
+
+      # Step 9: Set SSL options for backend
       - name: Set SSL options
         run: |
           cd register.login/Backend
@@ -55,13 +74,7 @@ jobs:
           chmod 644 ./keys/server.key
           chmod 644 ./keys/server.crt
 
-      # Step 7: Build React App
-      - name: Build React App
-        run: |
-          cd register.login/Frontend
-          npm run build
-
-      # Step 8: Check SSL configuration
+      # Step 10: Check SSL configuration
       - name: Check SSL configuration
         run: |
           cd register.login/Backend
@@ -69,25 +82,25 @@ jobs:
             echo "SSL certificate or key missing" && exit 1
           fi
 
-      # Step 9: Start the HTTPS server
+      # Step 11: Start the HTTPS server
       - name: Start HTTPS server
         run: |
           cd register.login/Backend
           node server.js &
           sleep 30  # Wait for the server to start
 
-      # Step 10: Check if the HTTPS server is running on port 5000
+      # Step 12: Check if the HTTPS server is running on port 5000
       - name: Check HTTPS server status
         run: |
           echo "Checking if HTTPS server is running on port 5000..."
           curl -v https://localhost:5000 --insecure || exit 1
 
-      # Step 11: Run server integration check
+      # Step 13: Run server integration check
       - name: Run server check
         run: |
           curl -f https://localhost:5000 --insecure || exit 1
 
-      # Step 12: Check for protection against additional attacks
+      # Step 14: Check for protection against additional attacks
       - name: Security Attack Checks
         run: |
           cd register.login/Backend
@@ -116,7 +129,7 @@ jobs:
             echo "DDoS protection missing (express-rate-limit middleware)" && exit 1
           fi
 
-      # Step 13: Upload results 
+      # Step 15: Upload results 
       - name: Upload test results
         if: failure()
         uses: actions/upload-artifact@v3
