@@ -38,19 +38,19 @@ jobs:
       # Step 4: Install backend dependencies
       - name: Install backend dependencies
         run: |
-          cd register.login/api_backend
+          cd register.login/Backend
           npm install
 
       # Step 5: Install frontend dependencies
       - name: Install frontend dependencies
         run: |
-          cd register.login/login-register-with-node
+          cd register.login/Frontend
           npm install
 
       # Step 6: Set SSL options
       - name: Set SSL options
         run: |
-          cd register.login/api_backend
+          cd register.login/Backend
           ls -l ./keys  # List the contents of the keys directory
           chmod 644 ./keys/server.key
           chmod 644 ./keys/server.crt
@@ -58,13 +58,13 @@ jobs:
       # Step 7: Build React App
       - name: Build React App
         run: |
-          cd register.login/login-register-with-node
+          cd register.login/Frontend
           npm run build
 
       # Step 8: Check SSL configuration
       - name: Check SSL configuration
         run: |
-          cd register.login/api_backend
+          cd register.login/Backend
           if [ ! -f ./keys/server.key ] || [ ! -f ./keys/server.crt ]; then
             echo "SSL certificate or key missing" && exit 1
           fi
@@ -72,7 +72,7 @@ jobs:
       # Step 9: Start the server
       - name: Start server
         run: |
-          cd register.login/api_backend
+          cd register.login/Backend
           node server.js &
           sleep 15  # Allow time for the server to start
 
@@ -91,7 +91,7 @@ jobs:
       # Step 12: Check for protection against additional attacks
       - name: Security Attack Checks
         run: |
-          cd register.login/api_backend
+          cd register.login/Backend
           # Check for Clickjacking Protection
           if ! grep -q "frameguard" App.js; then
             echo "Clickjacking protection missing (Helmet's frameguard)" && exit 1
@@ -124,4 +124,3 @@ jobs:
         with:
           name: test-results
           path: ./test-results
-
