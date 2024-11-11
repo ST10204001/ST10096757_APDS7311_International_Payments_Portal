@@ -128,7 +128,6 @@ const LoginRegister = () => {
         e.preventDefault();
     
         if (!validateInput()) {
-            console.log("Validation failed.");
             return;
         }
     
@@ -149,19 +148,13 @@ const LoginRegister = () => {
             });
     
             if (!response.ok) {
-                const responseBody = await response.text(); // Change to text to handle non-JSON responses
-                console.error('Login failed:', responseBody);
+                const responseBody = await response.text();
                 setError(responseBody || `HTTP error! status: ${response.status}`);
                 return;
             }
     
             const responseData = await response.json();
-            console.log('Login success:', responseData);
-    
-            setSuccessMessage('Login successful');
-            setError(null);
-            setUser(responseData.user);
-    
+            setUser({ username: responseData.user.username }); // Set username in UserContext
             navigate('/home', { state: { isEmployee } });
         } catch (err) {
             console.error('Login error:', err);
@@ -169,6 +162,7 @@ const LoginRegister = () => {
             setSuccessMessage(null);
         }
     };
+    
     
 
     // Toggle between Login and Register Forms
