@@ -17,11 +17,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
+      - name: Set up JDK 17 (Adoptium)
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adoptopenjdk'  # Use AdoptOpenJDK as the distribution
+          distribution: 'temurin'  # Use Adoptium (previously AdoptOpenJDK)
 
       - name: Cache SonarQube dependencies
         uses: actions/cache@v2
