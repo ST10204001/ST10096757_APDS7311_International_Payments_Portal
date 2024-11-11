@@ -10,7 +10,7 @@ const PendingTransactionList = () => {
 
     useEffect(() => {
         // Fetch the list of transactions from the backend
-        axios.get('/api/transactions') // Ensure this endpoint matches the backend
+        axios.get('/api/transactions/pending') // Ensure this endpoint matches the backend
             .then(response => {
                 console.log('Transactions fetched:', response.data); // Debugging: log the response data
                 setTransactions(response.data);

@@ -9,6 +9,7 @@ const transactionSchema = new mongoose.Schema({
   currency: { type: String, required: true },
   provider: { type: String, required: true },
   swiftCode: { type: String, required: false },
+  status: { type: String, default: 'pending' },
   createdAt: { type: Date, default: Date.now },
 });
 

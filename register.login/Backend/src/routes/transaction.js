@@ -47,7 +47,7 @@ router.post('/transaction', authMiddleware, async (req, res) => {
       amount,
       currency,
       provider,
-     // status: 'pending',
+      status: 'pending',
     });
 
      // Conditionally add swiftCode only if the provider is "SWIFT"
@@ -66,9 +66,9 @@ router.post('/transaction', authMiddleware, async (req, res) => {
 
 
 //endpoint to fetch all transactions 
-router.get('/transactions', authMiddleware, async (req, res) => { 
+router.get('/transactions/pending', authMiddleware, async (req, res) => { 
   try { 
-    const transactions = await Transaction.find(); 
+    const transactions = await Transaction.find({ status: 'pending' }); 
     console.log(transactions); // Log the transactions to check if user details are included 
     res.json(transactions); 
   } catch (error) { 
@@ -81,13 +81,20 @@ router.get('/transactions', authMiddleware, async (req, res) => {
 router.post('/transactions/submit/:id', authMiddleware, async (req, res) => { 
   try { 
     const transactionId = req.params.id; 
-    // Implement submission logic here (e.g., update database, send to SWIFT API, etc.) 
+    const transaction = await Transaction.findById(transactionId); 
+    if (!transaction) { 
+      return res.status(404).json({ error: 'Transaction not found' }); 
+    } 
+    
+    // Update transaction status to 'approved' 
+    transaction.status = 'approved'; 
+    await transaction.save(); 
+    
     res.json({ message: 'Transaction submitted to SWIFT!' }); 
   } catch (error) { 
     console.error('Error submitting transaction:', error); 
     res.status(500).json({ error: 'Failed to submit transaction to SWIFT' }); 
   } 
 });
-
 
 export default router;
